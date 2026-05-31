@@ -1,0 +1,7 @@
+{
+  "short_name": "Gallery",
+  "name": "Gallery",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff"
+}

@@ -1,0 +1,335 @@
+@import './generated-colors.css';
+
+/* #region BUTTONS */     
+button, .button {
+        background-color: var(--button-bg);
+        color: var(--button-text);
+        border: none;
+        margin: 0;
+        padding: 0;
+        border-radius: 4px;
+        text-decoration: none;
+        cursor: pointer;
+        line-height: 0;
+        transition: background-color .4s ease;
+        font-weight: bold;
+}  
+button:hover, .button:hover {
+        background: var(--button-bg-hover);
+        color: var(--button-text-hover);
+}
+button:active, .button:active {
+        background: var(--button-bg-active);
+        color: var(--button-text-active);
+}
+/* #endregion BUTTONS */       
+
+/* #region COLORS */      
+:root, :root[data-theme='actual'] {
+        --splash-bg: none;
+        --logo-carousel-wrapper-bg: none;
+        --logo-carousel-image-bg: none;
+        --funtime-all-bg: none;
+        --funtime-input-bg: var(--menu-modal-search-input-bg);
+        --input-and-button-bg: none;
+
+        --button-bg: rgba(var(--jason-5-rgb),.25);
+        --button-bg-hover: rgba(var(--jason-1-rgb),.6);
+        --button-bg-active: rgba(var(--jason-2-rgb),.6);
+        --button-text: rgba(255,255,255,.5);        
+        --button-text-hover: rgba(255,255,255,.75);        
+        --button-text-active: rgba(255,255,255,1);        
+        --text-color: white;
+        --body-bg: 
+                linear-gradient(
+                rgba(var(--jason-5-rgb),.2),
+                rgba(var(--jason-5-rgb),.2)), 
+                hsl(0 0% 8%);
+        --header-footer-bg: 
+                linear-gradient(
+                rgba(var(--jason-5-rgb),.13),
+                rgba(var(--jason-5-rgb),.13)), 
+                hsl(0 0% 7%);
+        --header-footer-inner-bg: none;
+        --header-footer-inner-left-bg: none;
+        --header-right-bg: none;
+        --header-footer-text: white;
+        --email-button-wrapper-bg: none;
+        --main-bg: none;
+        --no-results-bg: none;
+        --no-results-text: rgb(210, 210, 210);
+        --resume-text-outer-bg: none;
+        --resume-text-inner-bg: none;
+        --card-bg: 
+                linear-gradient(
+                rgba(var(--jason-5-rgb),.1),
+                rgba(var(--jason-5-rgb),.1)), 
+                hsl(0 0% 20%);
+        --card-image-bg: hotpink;
+        --card-image-img-bg: hotpink;
+        --card-text-bg: none;
+        --logo-button-bg: none;
+        --logo-button-bg-hover: hotpink;
+
+
+        --menu-outer-bg: var(--body-bg);
+        --menu-inner-bg: none;
+        --menu-modal-search-wrapper-bg: none;        
+        --menu-modal-input-reset-bg: none;
+        --menu-modal-search-input-bg: var(--button-bg);
+        --menu-modal-search-input-text: white;
+
+
+        --image-modal-overlay-div-bg: rgb(128,128,128);
+        --image-modal-content-div-bg: var(--body-bg);
+        --image-modal-content-div-tablet-bg: var(--body-bg);
+        --image-modal-content-div-cell-bg: var(--body-bg);
+        --image-modal-and-card-text-txt: rgb(210, 210, 210);
+        --image-modal-nav-and-text-div-bg: var(--header-footer-bg);
+        --image-modal-nav-div-bg: none;
+        --image-modal-close-div-bg: none;
+        --image-modal-back-and-forward-div-bg: none;
+        --image-modal-text-div-bg: none;
+        --image-modal-image-container-div-bg: none;
+
+        --image-modal-headline-bg: none;
+        --image-modal-date-bg: none;
+        --image-modal-location-bg: none;
+        --image-modal-description-bg: none;
+        --image-modal-filename-bg: none;
+        --image-modal-keywords-bg: none;
+}
+
+:root[data-theme='test'] {
+        --splash-bg: rgb(124, 72, 81);
+        --logo-carousel-wrapper-bg: rgb(90, 190, 236);
+        --logo-carousel-image-bg: rgb(99, 136, 94);
+        --funtime-all-bg: rgb(138, 117, 89);
+        --funtime-input-bg: rgb(189, 227, 177);
+        --input-and-button-bg: hotpink;
+
+
+        --button-bg: rgba(255,200,9,1);
+        --button-bg-hover: rgb(96, 183, 88);
+        --button-bg-active: rgba(0,255,255,1);
+        --button-text: rgba(255,0,111,1);
+        --button-text-hover: rgba(44,188,88,1);
+        --button-text-active: rgba(255,255,255,1);        
+        --text-color: rgb(92, 43, 67);
+        --body-bg: 
+                linear-gradient(
+                rgba(var(--jason-1-rgb),.1),
+                rgba(var(--jason-1-rgb),.1)), 
+                rgb(40, 40, 40);
+        --header-footer-bg: red;
+        --header-footer-inner-bg: pink;
+        --header-left-bg: black;
+        --header-right-bg: grey;
+        --header-footer-text: white;
+        --email-button-wrapper-bg: coral;
+        --main-bg: rgb(94, 114, 181);
+        --no-results-bg: lightblue;
+        --no-results-text: rgb(210, 210, 210);
+
+        --resume-text-outer-bg: hotpink;
+        --resume-text-inner-bg: rgb(163, 47, 105);
+
+        --card-bg: 
+                linear-gradient(
+                rgba(var(--jason-1-rgb),.1),
+                rgba(var(--jason-1-rgb),.1)), 
+                rgb(50, 50, 50);
+        --image-modal-and-card-text: rgb(210, 210, 210);
+        --card-image-bg: orange;
+        --card-image-img-bg: purple;
+        --card-text-bg: rgb(55, 168, 55);
+
+        --logo-button-bg: magenta;
+        --logo-button-bg-hover: skyblue;
+
+
+        --menu-outer-bg: rgba(117, 51, 180, 0.787);
+        --menu-inner-bg: rgb(102, 101, 192);
+        --menu-modal-search-wrapper-bg: lime;        
+        --menu-modal-input-reset-bg: purple;
+        --menu-modal-search-input-text: white;
+
+
+        --image-modal-overlay-div-bg: green;
+        --image-modal-content-div-bg: rgb(64, 52, 125);
+        --image-modal-content-div-tablet-bg: rgb(180, 116, 187);
+        --image-modal-content-div-cell-bg: rgb(190, 78, 108);
+        --image-modal-nav-and-text-div-bg: skyblue;
+        --image-modal-nav-div-bg: goldenrod;
+        --image-modal-close-div-bg: lime;
+        --image-modal-nav-button-bg:  rgb(193, 131, 185);
+        --image-modal-back-and-forward-div-bg: rgba(0, 162, 255, 0.25);
+        --image-modal-text-div-bg: hotpink;
+        --image-modal-image-container-div-bg: rgb(150, 58, 12);
+
+        --image-modal-and-card-text-txt: lightblue;
+        --image-modal-headline-bg: red;
+        --image-modal-date-bg: lightgreen;
+        --image-modal-location-bg: red;
+        --image-modal-description-bg: lightgreen;
+        --image-modal-filename-bg: red;
+        --image-modal-keywords-bg: lightgreen;
+}
+/* #endregion COLORS */       
+
+/* #region FONT_VARIABLES */       
+:root {
+  --font-heading: "Figtree", sans-serif;
+  --font-body: "Figtree", sans-serif;
+
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semi-bold: 600;
+  --weight-bold: 700;
+}
+/* #endregion FONT_VARS_IN_ROOT */       
+
+/* #region TEXT_STYLES */
+body {
+        font-family: var(--font-body);
+        font-weight: var(--weight-regular);
+        line-height: 1.6;
+        font-size: 16px;
+        color: var(--text-color);
+        margin: 0;
+}
+ul {
+        margin-top: .5rem;
+        margin-bottom: 2rem;
+}
+h2 {
+        color: inherit;
+        font-family: var(--font-heading);
+        font-weight: var(--weight-semi-bold);
+        font-size: 1.8rem;
+        line-height: 1;
+        margin: 0;
+}
+h3 {
+        color: inherit;
+        font-family: var(--font-heading);
+        font-weight: var(--weight-semi-bold);
+        font-size: 1.8rem;
+        line-height: 1;
+        margin: 0;
+}
+h4 {
+        color: inherit;
+        font-family: var(--font-heading);
+        font-weight: var(--weight-semi-bold);
+        font-size: 1.8rem;
+        line-height: 1;
+        margin: 0;
+}
+.button-text {
+        background: var(--button-bg);
+        color: var(--button-text);
+        font-family: var(--font-body);
+        font-weight: var(--weight-bold);
+        font-size: 0.875rem;
+        text-decoration: none;
+        margin-top: 0;
+        margin-bottom: 0;
+}
+/* #endregion TEXT_VAR_STYLES */       
+
+/* #region BANNER_IMAGES */  
+:root {
+        --banner_position_master: calc(50% + 0px) calc(50% + 0px); 
+        --banner_height_master: calc(var(--splash-max-width) * var(--crop-master));  
+        --banner_height_master-tablet: calc(var(--splash-max-width-tablet) * var(--crop-master));  
+        --banner_height_master-cell: calc(var(--splash-max-width-cell) * var(--crop-master));  
+        --crop-master: calc(.5625 * 1);
+        --splash-max-width: 600px;
+        --splash-max-width-tablet: 90vw;
+        --splash-max-width-cell: 90vw;
+}
+
+/* ORDER DOESN'T MATTER HERE */
+:root[data-theme-banner='logo-01'] {
+        --banner_url: url(assets/logo-01.png);     
+        --banner_height: var(--banner_height_master);              
+        --banner_position: var(--banner_position_master);
+}
+:root[data-theme-banner='logo-02'] {
+        --banner_url: url(assets/logo-02.png);        
+        --banner_height: var(--banner_height_master);              
+        --banner_position: var(--banner_position_master);
+}
+:root[data-theme-banner='logo-03'] {
+        --banner_url: url(assets/logo-03.png);        
+        --banner_height: var(--banner_height_master);              
+        --banner_position: var(--banner_position_master);
+}
+:root[data-theme-banner='logo-04'] {
+        --banner_url: url(assets/logo-04.png);        
+        --banner_height: var(--banner_height_master);              
+        --banner_position: var(--banner_position_master);
+}
+:root[data-theme-banner='logo-05'] {
+        --banner_url: url(assets/logo-05.png);        
+        --banner_height: var(--banner_height_master);              
+        --banner_position: var(--banner_position_master);
+}
+:root[data-theme-banner='logo-06'] {
+        --banner_url: url(assets/logo-06.png);        
+        --banner_height: var(--banner_height_master);              
+        --banner_position: var(--banner_position_master);
+}
+:root[data-theme-banner='logo-07'] {
+        --banner_url: url(assets/logo-07.png);        
+        --banner_height: var(--banner_height_master);              
+        --banner_position: var(--banner_position_master);
+}
+:root[data-theme-banner='logo-08'] {
+        --banner_url: url(assets/logo-08.png);        
+        --banner_height: var(--banner_height_master);              
+        --banner_position: var(--banner_position_master);
+}
+:root[data-theme-banner='logo-09'] {
+        --banner_url: url(assets/logo-09.png);        
+        --banner_height: var(--banner_height_master);              
+        --banner_position: var(--banner_position_master);
+}
+:root[data-theme-banner='logo-10'] {
+        --banner_url: url(assets/logo-10.png);        
+        --banner_height: var(--banner_height_master);              
+        --banner_position: var(--banner_position_master);
+}
+:root[data-theme-banner='logo-11'] {
+        --banner_url: url(assets/logo-11.png); 
+        --banner_height: var(--banner_height_master);              
+        --banner_position: var(--banner_position_master);
+}
+:root[data-theme-banner='logo-12'] {
+        --banner_url: url(assets/logo-12.png);        
+        --banner_height: var(--banner_height_master);              
+        --banner_position: var(--banner_position_master);
+}
+:root[data-theme-banner='logo-13'] {
+        --banner_url: url(assets/logo-13.png); 
+        --banner_height: var(--banner_height_master);              
+        --banner_position: var(--banner_position_master);
+}
+:root[data-theme-banner='logo-14'] {
+        --banner_url: url(assets/logo-14.png); 
+        --banner_height: var(--banner_height_master);              
+        --banner_position: var(--banner_position_master);
+}
+:root[data-theme-banner='logo-15'] {
+        --banner_url: url(assets/logo-15.png); 
+        --banner_height: var(--banner_height_master);              
+        --banner_position: var(--banner_position_master);
+}
+:root[data-theme-banner='logo-18'] {
+        --banner_url: url(assets/logo-18.png); 
+        --banner_height: var(--banner_height_master);              
+        --banner_position: var(--banner_position_master);
+}
+/* #endregion BANNER_IMAGES */       

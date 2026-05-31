@@ -1,0 +1,70 @@
+/* Loading skeleton and shimmer */
+.loading-skeleton {
+  padding: 24px;
+  box-sizing: border-box;
+}
+.skeleton-hero {
+  max-width: 980px;
+  margin: 0 auto 18px auto;
+  display: grid;
+  gap: 12px;
+}
+.skeleton-title {
+  height: 28px;
+  width: 50%;
+  border-radius: 6px;
+  background: #e6e6e6;
+}
+.skeleton-text {
+  height: 14px;
+  width: 80%;
+  border-radius: 6px;
+  background: #eee;
+}
+.skeleton-cta {
+  height: 36px;
+  width: 140px;
+  border-radius: 6px;
+  background: #e0e0e0;
+}
+.skeleton-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+.skeleton-image {
+  height: 140px;
+  border-radius: 8px;
+  background: #ddd;
+}
+
+/* shimmer animation */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  height: 100%;
+  width: 150%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shimmer 1.2s linear infinite;
+}
+@keyframes shimmer {
+  to {
+    transform: translateX(150%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shimmer::after {
+    animation: none;
+  }
+}

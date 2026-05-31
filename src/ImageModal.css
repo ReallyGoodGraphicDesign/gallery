@@ -1,0 +1,627 @@
+.image-modal-overlay-div { 
+        background: var(--image-modal-overlay-div-bg);
+        position: fixed; 
+        inset: 0; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-overlay-div { 
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+.image-modal-overlay-div { 
+        opacity: 1;
+}
+}
+.image-modal-content-div { 
+        background: var(--image-modal-content-div-bg);
+        padding: 0;
+        width: 100vw;
+        top: 0; 
+        left: 0; 
+        inset: 0; 
+        height: 100svh; 
+        min-height: 100svh; 
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        box-sizing: border-box;
+        overflow: hidden;
+        row-gap: 0;
+        position: relative; /* creates stacking context for children */
+        transition: background 200ms ease, background-color 200ms ease; 
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-content-div { 
+        opacity: 1;
+        background: var(--image-modal-content-div-tablet-bg);
+        position: relative;
+}
+}
+@media (max-width: 600px) {
+.image-modal-content-div { 
+        opacity: 1;
+        background: var(--image-modal-content-div-cell-bg);
+        position: relative;
+}
+}
+.image-modal-content-div.immersive {
+        opacity: 1;
+        padding: 0; 
+        background-color: black;
+        height: 100svh; 
+        min-height: 100svh; 
+        min-height: 100%;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-content-div.immersive {
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+.image-modal-content-div.immersive {
+        opacity: 1;
+}
+}
+.image-modal-nav-and-text-div { 
+        background: var(--image-modal-nav-and-text-div-bg);
+        color: var(--image-modal-and-card-text-txt);
+        width: 100%;
+        height: fit-content;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding: 6px 6.5px;
+        padding-top: calc(6px + env(safe-area-inset-top, 0)); 
+        gap: 10px; 
+        box-sizing: border-box;
+        border-radius: 0;
+        min-height: fit-content;
+        opacity: 1;
+        transition: opacity 200ms ease;
+        position: relative; 
+        z-index: 10;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-nav-and-text-div { 
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+.image-modal-nav-and-text-div { 
+        opacity: 1;
+}
+}
+.image-modal-nav-and-text-div { pointer-events: none; }
+.image-modal-nav-and-text-div button,
+.image-modal-nav-and-text-div [role="button"],
+.image-modal-nav-and-text-div a,
+.image-modal-nav-and-text-div input,
+.image-modal-nav-and-text-div select,
+.image-modal-nav-and-text-div textarea { 
+        pointer-events: auto;
+}
+.image-modal-content-div.immersive .image-modal-nav-and-text-div,
+.image-modal-content-div.immersive .image-modal-nav-and-text-div * {
+        opacity: 0 !important;
+        pointer-events: none !important;
+        display: none;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-content-div.immersive .image-modal-nav-and-text-div,
+.image-modal-content-div.immersive .image-modal-nav-and-text-div * {
+        opacity: 0 !important;
+        pointer-events: none !important;
+}
+}
+@media (max-width: 600px) {
+.image-modal-content-div.immersive .image-modal-nav-and-text-div,
+.image-modal-content-div.immersive .image-modal-nav-and-text-div * {
+        opacity: 0 !important;
+        pointer-events: none !important;
+}
+}
+.image-modal-nav-div { 
+        background-color: var(--image-modal-nav-div-bg);
+        height: auto;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding: 0;
+        margin: 0;
+        gap: 6px;
+        box-sizing: border-box;
+        border-radius: none;
+        flex: 0 0 auto;
+        pointer-events: none !important;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-nav-div { 
+        opacity: 1;
+        justify-content: flex-end;
+        order: 2;
+        padding: 0;
+}
+}
+@media (max-width: 600px) {
+.image-modal-nav-div { 
+        opacity: 1;
+        order: 2;
+        padding: 0;
+}
+} 
+.image-modal-close-div { 
+        background-color: var(--image-modal-close-div-bg);
+        height: 100%;
+        box-sizing: border-box;
+        border-radius: 6px;
+        position: relative; /* so ZI works */
+        z-index: 1;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-close-div { 
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+.image-modal-close-div { 
+        opacity: 1;
+}
+}
+.image-modal-nav-button { 
+        border: none;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-nav-button { 
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+.image-modal-nav-button { 
+        opacity: 1;
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+.image-modal-close-div i { 
+        font-size: 1.8rem;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-close-div i { 
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+.image-modal-close-div i { 
+        opacity: 1;
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+.image-modal-nav-button .bi {
+        font-size: 2rem;
+        padding: 4px;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-nav-button .bi {
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+.image-modal-nav-button .bi {
+        opacity: 1;
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+.image-modal-back-and-forward-div { 
+        opacity: 1;
+        background-color: var(--image-modal-back-and-forward-div-bg);
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding: 0;
+        gap: 6px;
+        box-sizing: border-box;
+        border-radius: 6px;
+        pointer-events: none;
+        transition: opacity 200ms ease;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-back-and-forward-div { 
+        opacity: 1;
+        background-color: var(--image-modal-back-and-forward-div-bg);
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding: 0;
+        gap: .4vw;
+        box-sizing: border-box;
+        border-radius: 6px;
+        pointer-events: none;
+        position: fixed;
+        left: 0;
+        right: 0;
+        transition: opacity 200ms ease;
+        transform: translateY(-45.75%);
+}
+}
+@media (max-width: 600px) {
+.image-modal-back-and-forward-div { 
+        opacity: 1;
+        background-color: var(--image-modal-back-and-forward-div-bg);
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding: 0;
+        gap: .4vw;
+        box-sizing: border-box;
+        border-radius: 6px;
+        pointer-events: none;
+        position: fixed;
+        left: 0;
+        right: 0;
+        transition: opacity 200ms ease;
+        transform: translateY(-45.75%);
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+.image-modal-content-div.immersive .image-modal-back-and-forward-div,
+.image-modal-content-div.immersive .image-modal-back-and-forward-div * {
+        opacity: 0 !important;
+        pointer-events: none !important;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-content-div.immersive .image-modal-back-and-forward-div,
+.image-modal-content-div.immersive .image-modal-back-and-forward-div * {
+        opacity: 0 !important;
+        pointer-events: none !important;
+}
+}
+@media (max-width: 600px) {
+.image-modal-content-div.immersive .image-modal-back-and-forward-div,
+.image-modal-content-div.immersive .image-modal-back-and-forward-div * {
+        opacity: 0 !important;
+        pointer-events: none !important;
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+.image-modal-back-and-forward-div .image-modal-nav-button { 
+        opacity: 0.9;
+        transition: opacity 150ms ease, transform 150ms ease;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-back-and-forward-div .image-modal-nav-button { 
+        opacity: 0.9;
+        transition: opacity 150ms ease, transform 150ms ease;
+        pointer-events: auto; 
+}
+}
+@media (max-width: 600px) {
+.image-modal-back-and-forward-div .image-modal-nav-button { 
+        opacity: 0.9;
+        transition: opacity 150ms ease, transform 150ms ease;
+        pointer-events: auto; 
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+.image-modal-back-and-forward-div .image-modal-nav-button:active {
+        opacity: 1;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-back-and-forward-div .image-modal-nav-button:active {
+        opacity: 1;
+        transform: scale(0.96);
+}
+}
+@media (max-width: 600px) {
+.image-modal-back-and-forward-div .image-modal-nav-button:active {
+        opacity: 1;
+        transform: scale(0.96);
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+.image-modal-back-and-forward-div button,
+.image-modal-back-and-forward-div [role="button"],
+.image-modal-back-and-forward-div a {
+        pointer-events: auto;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-back-and-forward-div button,
+.image-modal-back-and-forward-div [role="button"],
+.image-modal-back-and-forward-div a {        
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+.image-modal-back-and-forward-div button,
+.image-modal-back-and-forward-div [role="button"],
+.image-modal-back-and-forward-div a {        
+        opacity: 1;
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+/* yyy xxx */ .image-modal-text-div {
+        background-color: var(--image-modal-text-div-bg);
+        padding: 2px 0 0 0;
+        border-radius: none;
+        flex: 1 1 auto;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-text-div {
+        opacity: 1;
+        padding: 4px 0 0 6px;
+}
+}
+@media (max-width: 600px) {
+.image-modal-text-div {
+        opacity: 1;
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+.image-modal-headline {
+        background-color: var(--image-modal-headline-bg);
+        font-size: 1.2rem;
+        margin: 0;
+        padding: 0;
+        line-height: 1rem;    
+}
+.image-modal-date-location {
+        background-color: var(--image-modal-date-bg);
+        font-size: 1rem;
+        margin: 0 0 0 0;
+        padding: 4px 0 0 0;
+        line-height: 1rem;    
+}
+.image-modal-date {
+        background-color: var(--image-modal-date-bg);
+        font-size: .9rem;
+        margin: 0 0 0 0;
+        padding: 4px 0 0 0;
+        line-height: 1rem;    
+}
+.image-modal-location {
+        display: none;
+        background-color: var(--image-modal-location-bg);
+        font-size: .8rem;
+        margin: 0 0 0 0;
+        padding: 4px 0 0 0;
+        line-height: .75rem;    
+}
+.image-modal-description {  
+        display: none;
+        background-color: var(--image-modal-description-bg);
+        font-size: 1rem;
+        margin: 0 0 0 0;
+        padding: 4px 0 0 0;
+        line-height: 1.25rem;    
+}
+.image-modal-filename {
+        background-color: var(--image-modal-filename-bg);
+        display: none;
+}
+.image-modal-keywords {
+        background-color: var(--image-modal-keywords-bg);
+        display: none;
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+.image-modal-image-container-div {
+        background-color: var(--image-modal-image-container-div-bg);
+        flex-grow: 1;
+        max-width: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: none;
+        overflow: hidden;
+        padding: 12px;
+        box-sizing: border-box;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-image-container-div {
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+.image-modal-image-container-div {
+        opacity: 1;
+}
+}
+
+/* Optional: show a helpful cursor on desktop; touch devices ignore it */
+@media (hover: hover) and (pointer: fine) {
+.image-modal-content-div.immersive .image-modal-image-container-div {
+        cursor: zoom-out;
+  }
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+.image-modal-content-div.immersive .image-modal-image-container-div {
+        width: 100%;
+        height: 100%;
+        padding: 0 !important;
+        border-radius: 0;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-content-div.immersive .image-modal-image-container-div {
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+.image-modal-content-div.immersive .image-modal-image-container-div {
+        opacity: 1;
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+/* z-index */ .image-modal-image-container-div {
+  position: relative;
+  z-index: 3;   /* above background layers */
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-image-container-div {
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+.image-modal-image-container-div {
+        opacity: 1;
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+/* z-index */ .image-modal-image-container-div picture {
+        width: 100%;
+        height: 100%;
+        display: block;
+        border-radius: inherit; /* keeps all corners aligned */
+        /* Optional: give image container a stacking baseline */  
+        position: relative;
+        z-index: 9; /* picture sits under controls */
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-image-container-div picture {
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+.image-modal-image-container-div picture {
+        opacity: 1;
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+.image-modal-image-container-div img { /* fill box, preserve aspect, inherit radius */
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: contain; /* show entire image */
+        border-radius: inherit; 
+        border-radius: 8px;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-image-container-div img {        
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+.image-modal-image-container-div img {
+        opacity: 1;
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+/* Make sure the picture/img fill the container */
+.image-modal-content-div.immersive .image-modal-image-container-div picture,
+.image-modal-content-div.immersive .image-modal-image-container-div img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: contain; /* keep full image visible */
+        border-radius: 0;    
+        /*
+        transform: scale(1.02);  subtle; remove if you prefer zero movement */
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-content-div.immersive .image-modal-image-container-div picture,
+.image-modal-content-div.immersive .image-modal-image-container-div img {
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+.image-modal-content-div.immersive .image-modal-image-container-div picture,
+.image-modal-content-div.immersive .image-modal-image-container-div img {
+        opacity: 1;
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+@media (prefers-reduced-motion: reduce) {
+.image-modal-content-div,
+.image-modal-nav-and-text-div,
+.image-modal-back-and-forward-div,
+.image-modal-image-container-div picture,
+.image-modal-image-container-div img {
+        transition: none !important;
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+/* Optional: nudge image a hair for a "focused" feel */
+.image-modal-image-container-div img {
+        transition: transform 250ms ease, opacity 200ms ease;
+        will-change: transform, opacity;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-image-container-div img {
+        transition: transform 250ms ease, opacity 200ms ease;
+        will-change: transform, opacity;
+}
+}
+@media (max-width: 600px) {
+.image-modal-image-container-div img {
+        transition: transform 250ms ease, opacity 200ms ease;
+        will-change: transform, opacity;
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+.image-modal-image-container-div picture {
+        transition: transform 250ms ease, opacity 200ms ease;
+        will-change: transform, opacity;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-image-container-div picture {
+        transition: transform 250ms ease, opacity 200ms ease;
+        will-change: transform, opacity;
+}
+}
+@media (max-width: 600px) {
+.image-modal-image-container-div picture {
+        transition: transform 250ms ease, opacity 200ms ease;
+        will-change: transform, opacity;
+}
+}

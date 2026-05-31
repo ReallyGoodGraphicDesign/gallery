@@ -1,0 +1,261 @@
+html, body, #root {
+        background: var(--body-bg);
+        height: 100%;
+        margin: 0;
+        padding: 0;
+}
+.App {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+}
+.splash {
+        background: var(--splash-bg);
+        max-width: var(--splash-max-width);
+        margin: 0 auto;
+        padding: 0;
+        box-sizing: border-box;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.splash {
+        opacity: 1;
+        max-width: var(--splash-max-width-tablet);
+}
+}
+@media (max-width: 600px) {
+.splash {
+        opacity: 1;
+        max-width: var(--splash-max-width-cell);
+}
+}
+.splash h3 {
+        opacity: 1;
+        font-size: 1.2rem;
+        font-weight: var(--weight-regular);
+        line-height: .5;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.splash h3 {
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+.splash h3 {
+        opacity: 1;
+}
+}
+.logo-carousel-wrapper {
+        opacity: 1;
+        display: block;
+        background-color: var(--logo-carousel-wrapper-bg);
+        width: 100%;
+        padding: 30px 0;
+        height: var(--banner_height_master);
+        margin: 0;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.logo-carousel-wrapper {
+        opacity: 1;
+        height: var(--banner_height_master-tablet);
+}
+}
+@media (max-width: 600px) {
+.logo-carousel-wrapper {
+        opacity: 1;
+        height: var(--banner_height_master-cell);
+}
+}
+.logo-carousel-image {
+        background: var(--logo-carousel-image-bg); 
+        background-image: var(--banner_url);
+        height: var(--banner_height_master);
+        background-position: var(--banner_position);
+        background-size: 100%;
+        flex: none;
+        display: block;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.logo-carousel-image {
+        opacity: 1;
+        height: var(--banner_height_master-tablet);
+}
+}
+@media (max-width: 600px) {
+.logo-carousel-image {
+        opacity: 1;
+        height: var(--banner_height_master-cell);
+}
+}
+.logo-carousel-image:hover {
+        background: var(--logo-carousel-image-bg); 
+        background-image: var(--banner_url);
+        height: var(--banner_height_master);
+        background-position: var(--banner_position);
+        background-size: 100%;
+        flex: none;
+        display: block;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.logo-carousel-image:hover {
+        opacity: 1;
+        height: var(--banner_height_master-tablet);
+}
+}
+@media (max-width: 600px) {
+.logo-carousel-image:hover {
+        opacity: 1;
+        height: var(--banner_height_master-cell);
+}
+}
+.logo-carousel-button {
+        appearance: none;
+        -webkit-appearance: none;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        border-radius: 0;
+        width: 100%;
+        /* Height & background are already defined on .logo carousel */
+        cursor: pointer;/*
+        background-color: transparent;  preserve the background from .hero-image-carousel */
+}
+.funtime-all {
+        background: var(--funtime-all-bg);
+        border: none;
+        width: var(--splash-max-width);
+        margin: auto;
+        padding: 0;
+        box-sizing: border-box;
+        font-size: 16px;
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+.funtime-all {
+        opacity: 1;
+        width: 70%;
+}
+}
+@media (max-width: 600px) {
+.funtime-all {
+        opacity: 1;
+        width: 100%;
+}
+}
+.input-and-button {
+        background: var(--input-and-button-bg);
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        box-sizing: border-box;
+        gap: .5rem;
+}
+.funtime-input {
+        background: var(--funtime-input-bg);
+        color: var(--menu-modal-search-input-text);
+        border: none;
+        height: 40px;
+        width: 100%;
+        vertical-align: middle;
+        border-radius: 4px;
+        margin: 10px 0 0 0;
+        padding: 0;
+        text-indent: 10px;
+        box-sizing: border-box;
+        font-size: 16px;
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+.funtime-input {
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+.funtime-input {
+        opacity: 1;
+}
+}
+.funtime-button {
+        display: block;
+        height: 40px;
+        transition: opacity 400ms ease;
+        margin-top: 10px !important;
+        padding: 0 16px !important;
+        box-shadow: none;
+        border: none;
+        outline: none;
+}
+.funtime-button:focus {
+        box-shadow: none;
+        border: none;
+        outline: none;
+}
+.funtime-button.hidden {
+        display: none;
+        pointer-events: none;
+}
+.funtime-button.visible {
+        display: inline-block;
+        pointer-events: auto;
+}
+.menu-modal-input-reset:has(.funtime-button.hidden) {
+  grid-template-columns: 1fr; 
+}
+main {
+        background: var(--main-bg);
+        flex: 1;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 8px;
+        box-sizing: border-box;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+main {
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+main {
+        opacity: 1;
+}
+}
+body.menu-open main {
+        padding-top: 0;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+body.menu-open main {
+        opacity: 1;
+}
+}
+@media (max-width: 600px) {
+body.menu-open main {
+        opacity: 1;
+}
+}
+.no-results {
+        background-color: var(--no-results-bg);
+        min-height: 40vh;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        opacity: .85;
+}
+.no-results p {
+        color: var(--no-results-text);
+        font-weight: var(--weight-semi-bold);
+}
+.card-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding-bottom: 20px;
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+.card-grid {
+        grid-template-columns: repeat(2, 1fr);
+}
+}
+@media (max-width: 600px) {
+.card-grid {
+        grid-template-columns: repeat(1, 1fr);
+}
+}

@@ -1,0 +1,87 @@
+.card { 
+        background: var(--card-bg);
+        display: flex;
+        gap: 8px;
+        margin: 0;
+        padding: 8px;
+        border: 0;
+        border-radius: 6px;
+        overflow: hidden;
+        box-sizing: border-box;
+}
+.card-image-container {
+        background: none;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        flex: 1 1 50%;
+        padding: 0;
+        box-sizing: border-box;
+        max-height: 600px;
+        overflow: hidden;
+}
+.card-image-container img {
+        background: none;
+        max-width: 100%;
+        max-height: 100%;
+        height: auto;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
+        border-radius: 4px;    
+        cursor: pointer;
+        padding: 0;
+        filter: saturate(0%);
+        transition: filter 0.4s ease;
+}
+.card-image-container img:hover {
+        filter: saturate(110%);
+}
+.card-text-container {
+        background-color: var(--card-text-bg);
+        color: var(--image-modal-and-card-text-txt);
+        flex: 1 1 50%;
+        padding: 0 0 0 4px;
+        box-sizing: border-box;
+}
+.card-headline {
+        font-size: 1rem;
+        margin-top: 0;    
+        margin-bottom: 0;
+        line-height: 1.25rem;    
+}
+.card-date-location {
+        display: none;
+        font-size: .8rem;
+        margin-top: 2px;    
+        margin-bottom: 0;
+} 
+.card-date {
+        font-size: .8rem;
+        margin-top: 2px;    
+        margin-bottom: 0;
+} 
+.card-location {
+        display: none;
+        font-size: 1.0rem;
+        margin-top: 0;    
+        margin-bottom: 8px;
+}
+.card-description {
+        display: none;
+        font-size: 1.0rem;
+        margin-top: 0;    
+        margin-bottom: 8px;
+}
+.card-filename {
+        display: none;
+        font-size: 1.0rem;
+        margin-top: 0;    
+        margin-bottom: 8px;
+}
+.card-keywords {
+        display: none;
+        font-size: 1.0rem;
+        margin-top: 0;    
+        margin-bottom: 8px;
+}

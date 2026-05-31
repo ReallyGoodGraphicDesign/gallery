@@ -1,0 +1,27 @@
+/* Runtime-controlled scrollbar compensation
+   (JS sets --sbw and toggles .has-scroll on <html>) */
+:root {
+        --sbw: 0px;
+}
+html.no-scroll body {
+        padding-right: var(--sbw);
+}
+html.no-scroll .header,
+html.no-scroll .menu-outer { padding-right: var(--sbw); 
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+/* Prevent bg scroll when the header menu is open */
+html.menu-open, html.menu-open body {
+  overflow: hidden;
+}
