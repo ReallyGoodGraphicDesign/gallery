@@ -56,7 +56,7 @@ button:active, .button:active {
         --header-footer-text: white;
         --email-button-wrapper-bg: none;
         --main-bg: none;
-        --no-results-bg: none;
+        --no-results-bg: none; 
         --no-results-text: rgb(210, 210, 210);
         --resume-text-outer-bg: none;
         --resume-text-inner-bg: none;
