@@ -26,8 +26,8 @@ import { useEffect, useState } from "react";
    "logo-18"
 ];
 
-const funtime = "Ok";
-const AUTH_KEY = "gallery-authed"; // name in localStorage
+// Auth is now handled server-side by Pages Functions (/api/login, /api/session).
+// The password lives in the GALLERY_PASSWORD secret, never in this bundle.
 
 function App() {
   // 1. auth hooks
@@ -46,12 +46,13 @@ function App() {
      return saved || attr || BANNERS[0];
    });
   
-  // 👇 check localStorage once, when the app mounts
+  // 👇 ask the server once, on mount, whether we already have a valid session
   useEffect(() => {
-    const saved = localStorage.getItem(AUTH_KEY);
-    if (saved === "true") {
-      setAuthed(true);
-    }
+    fetch("/api/session", { credentials: "same-origin" })
+      .then((res) => {
+        if (res.ok) setAuthed(true);
+      })
+      .catch(() => {});
   }, []);
 
    useEffect(() => {
@@ -84,29 +85,26 @@ function App() {
     )
       .then((res) => res.json())
       .then((data) => {
-        const BASE = window.location.pathname.startsWith("/gallery")
-          ? "/gallery"
-          : "";
-
-        const fix = (v) => {
-          if (!v) return v;
-          if (typeof v === "string" && v.startsWith(`${BASE}/`)) return v;
-          if (typeof v === "string" && v.startsWith("/")) return `${BASE}${v}`;
-          return `${BASE}/${v.replace(/^\.?\/*/, "")}`;
+        // Turn a Google Sheet image path into an authenticated API URL.
+        // The sheet stores ".../images/large/Foo.jpg"; we want
+        // "/api/image/large/Foo.webp", which the gated Function serves from R2.
+        const toApi = (v) => {
+          if (typeof v !== "string" || !v) return v;
+          const webp = v.replace(/\.jpe?g$/i, ".webp");
+          const marker = "images/";
+          const i = webp.indexOf(marker);
+          const key = i >= 0 ? webp.slice(i + marker.length) : webp.replace(/^\/+/, "");
+          // encode each segment (handles spaces in filenames), keep the slashes
+          const encoded = key.split("/").map(encodeURIComponent).join("/");
+          return `/api/image/${encoded}`;
         };
-
-        // Serve WebP versions of the gallery images. The Google Sheet still
-        // stores .jpg paths; we rewrite the extension for the four image fields
-        // only (the `filename` display field is left untouched).
-        const toWebp = (v) =>
-          typeof v === "string" ? v.replace(/\.jpe?g$/i, ".webp") : v;
 
         const patched = data.map((card) => ({
           ...card,
-          imageTiny: fix(toWebp(card.imageTiny)),
-          imageSmall: fix(toWebp(card.imageSmall)),
-          imageMedium: fix(toWebp(card.imageMedium)),
-          imageLarge: fix(toWebp(card.imageLarge)),
+          imageTiny: toApi(card.imageTiny),
+          imageSmall: toApi(card.imageSmall),
+          imageMedium: toApi(card.imageMedium),
+          imageLarge: toApi(card.imageLarge),
         }));
 
         setCardData(patched);
@@ -166,13 +164,22 @@ function App() {
       console.warn("Non-string location at row", i, c.location);
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (input === funtime) {
-      setAuthed(true);
-      localStorage.setItem(AUTH_KEY, "true");
-    } else {
-      alert("No");
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({ password: input }),
+      });
+      if (res.ok) {
+        setAuthed(true);
+      } else {
+        alert("No");
+      }
+    } catch {
+      alert("Something went wrong. Try again.");
     }
   };
 
