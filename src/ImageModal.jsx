@@ -45,10 +45,11 @@ const ImageModal = ({
     return () => window.removeEventListener("keydown", onKey);
   }, [isImmersive, onNext, onPrev]);
 
-  // Image sources (encode if you have spaces)
-  const small  = encodeURI(imageSmall);
-  const medium = encodeURI(imageMedium);
-  const large  = encodeURI(imageLarge);
+  // Image sources are already URL-encoded by App's toApi(); do NOT re-encode.
+  // encodeURI() here would turn each %20 into %2520 and 404 every request.
+  const small  = imageSmall;
+  const medium = imageMedium;
+  const large  = imageLarge;
 
   // ---- Swipe state (declare hooks unconditionally) ----
   const startXRef = useRef(null);
