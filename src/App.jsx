@@ -77,12 +77,12 @@ function App() {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // fetch data
+  // fetch data — only after login, since /api/data requires a valid session.
+  // The Google Apps Script URL now lives server-side in the SHEET_URL secret.
   useEffect(() => {
+    if (!authed) return;
     setLoading(true);
-    fetch(
-      "https://script.google.com/macros/s/AKfycbz7AC7ptwQ91zSTO9xYisad8JmB5YmtB3jDq_ZZatYxZHtbuJPlvlswu-JUXcJgKiBJ1g/exec"
-    )
+    fetch("/api/data", { credentials: "same-origin" })
       .then((res) => res.json())
       .then((data) => {
         // Turn a Google Sheet image path into an authenticated API URL.
@@ -112,7 +112,7 @@ function App() {
       })
       .catch((err) => console.error("Error loading data:", err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [authed]);
 
   // search filter
   useEffect(() => {
