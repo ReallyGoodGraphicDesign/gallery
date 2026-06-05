@@ -25,3 +25,10 @@ yarn-error.log*
 
 # Custom project-specific ignores
 Ignore/
+
+# Local wrangler / Pages dev
+.dev.vars
+.wrangler/
+# Local-only dev config (remote R2 binding). Kept out of the repo so the
+# Cloudflare production build keeps using its dashboard config untouched.
+wrangler.jsonc

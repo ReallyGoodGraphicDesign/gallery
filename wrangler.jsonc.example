@@ -1,0 +1,15 @@
+{
+  // LOCAL-ONLY wrangler config, used only by `npm run dev:full` via --config.
+  // It is gitignored and never read by Cloudflare's production build (which
+  // uses the dashboard bindings/secrets). Its sole job: bind the IMAGES R2
+  // bucket in REMOTE mode so local dev serves your real gallery images.
+  "name": "rggd-gallery-dev",
+  "compatibility_date": "2026-06-05",
+  "r2_buckets": [
+    {
+      "binding": "IMAGES",
+      "bucket_name": "rggd-gallery-images",
+      "remote": true
+    }
+  ]
+}

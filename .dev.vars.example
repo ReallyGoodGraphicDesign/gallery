@@ -1,0 +1,13 @@
+# Local development secrets for `npm run dev:full` (wrangler pages dev).
+# Copy this file to `.dev.vars` (which is gitignored) and fill in real values.
+# These only affect your LOCAL machine — production uses the Cloudflare dashboard
+# secrets, which are completely separate.
+
+# Any value you like — this is the password you'll type on the local login screen.
+GALLERY_PASSWORD=localdev
+
+# Any random string. Only signs local session cookies; need not match production.
+SESSION_SECRET=local-only-change-me
+
+# The CURRENT (post-rotation) Google Apps Script /exec URL, so local data loads.
+SHEET_URL=https://script.google.com/macros/s/REPLACE_WITH_YOUR_NEW_DEPLOYMENT_ID/exec
