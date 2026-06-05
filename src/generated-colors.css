@@ -1,10 +1,11 @@
-/* Generated from colors.ase */
+/* Generated from colors-rggd.ase */
 :root {
-  --black-rgb: 0,0,0;
-  --white-rgb: 255,255,255;
-  --jason-1-rgb: 170,98,131;
-  --jason-2-rgb: 189,174,72;
-  --jason-3-rgb: 71,142,174;
-  --jason-4-rgb: 142,173,129;
-  --jason-5-rgb: 142,138,122;
+  --rgb-black-rgb: 0,0,0;
+  --rgb-white-rgb: 255,255,255;
+  --attention-rgb: 255,0,128;
+  --rggd-1-rgb: 154,54,23;
+  --rggd-2-rgb: 176,158,48;
+  --rggd-3-rgb: 62,136,170;
+  --rggd-4-rgb: 112,144,89;
+  --rggd-5-rgb: 126,120,110;
 }

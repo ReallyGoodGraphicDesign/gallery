@@ -2,14 +2,14 @@ const fs = require('fs');
 const path = require('path');
 const ase = require('ase-util');
 
-const aseFilePath = path.join(__dirname, '..', 'src', 'colors.ase');
+const aseFilePath = path.join(__dirname, '..', 'src', 'colors-rggd.ase');
 const outputCssPath = path.join(__dirname, '..', 'src', 'generated-colors.css');
 
 try {
   const buffer = fs.readFileSync(aseFilePath);
   const data = ase.read(buffer);
 
-  let css = '/* Generated from colors.ase */\n:root {\n';
+  let css = '/* Generated from colors-rggd.ase */\n:root {\n';
 
   function processEntries(entries) {
     entries.forEach(entry => {

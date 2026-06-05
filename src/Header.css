@@ -29,9 +29,9 @@
         box-sizing: border-box;
         font-size: 1.25rem;
         gap: 3rem;
-        margin: 0;
+        margin: 0 0 0 8px;
         vertical-align: middle;
-        padding: 8px;
+        padding: none;
 }
 .logo-button {
         background: var(--logo-button-bg);
@@ -47,7 +47,7 @@
 .logo-button img {
         opacity: .75;
         display: block;
-        height: 36px;
+        height: 56px;
         width: auto;
         margin: 0;
         padding: 0;
@@ -69,8 +69,8 @@
         justify-content: flex-end;
         align-items: center;
         box-sizing: border-box;
-        padding: 0 0 0 0;
-        margin: 0 8px 0 0;
+        padding: none;
+        margin: 8px;
         gap: 15rem;
         width: 0px;  
 }
