@@ -1,4 +1,4 @@
-.header { 
+.header {
         background: var(--header-footer-bg);
         color: var(--header-footer-text);
         width: 100%;
@@ -6,13 +6,26 @@
         position: sticky;
         top: 0;
         z-index: 1;
+        height: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+}
+/* When the menu is open, drop back to block layout so .menu-outer
+   stacks below .header-inner instead of flexing beside it. */
+body.menu-open .header {
+        display: block;
+        /* Let the header grow to fit .header-inner (100px) + .menu-outer's
+           natural height, instead of hard-coding a total. */
+        height: auto;
 }
 .header-inner {
         background: var(--header-footer-inner-bg);
         max-width: 1000px;
-        width: 100%;              
+        width: 100%;     
         margin: 0 auto;
         padding: 0;        
+        height: 56px;
         display: flex;
         justify-content: space-between;
         align-items: center;

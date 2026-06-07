@@ -77,9 +77,11 @@
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
-        align-items: flex-start;
-        padding: 6px 6.5px;
+        align-items: center;
+        padding: 8px;
+        /*
         padding-top: calc(6px + env(safe-area-inset-top, 0)); 
+        */
         gap: 10px; 
         box-sizing: border-box;
         border-radius: 0;

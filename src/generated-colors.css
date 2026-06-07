@@ -3,9 +3,9 @@
   --rgb-black-rgb: 0,0,0;
   --rgb-white-rgb: 255,255,255;
   --attention-rgb: 255,0,128;
-  --rggd-1-rgb: 154,54,23;
-  --rggd-2-rgb: 176,158,48;
-  --rggd-3-rgb: 62,136,170;
-  --rggd-4-rgb: 112,144,89;
-  --rggd-5-rgb: 126,120,110;
+  --custom_color-1-rgb: 154,54,23;
+  --custom_color-2-rgb: 176,158,48;
+  --custom_color-3-rgb: 62,136,170;
+  --custom_color-4-rgb: 112,144,89;
+  --custom_color-5-rgb: 126,120,110;
 }

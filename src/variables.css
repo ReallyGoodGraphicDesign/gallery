@@ -33,22 +33,22 @@ button:active, .button:active {
         --funtime-input-bg: var(--menu-modal-search-input-bg);
         --input-and-button-bg: none;
 
-        --button-bg: rgba(var(--rggd-5-rgb),.25);
-        --button-bg-hover: rgba(var(--rggd-1-rgb),.6);
-        --button-bg-active: rgba(var(--rggd-2-rgb),.6);
+        --button-bg: rgba(var(--custom_color-5-rgb),.25);
+        --button-bg-hover: rgba(var(--custom_color-1-rgb),.6);
+        --button-bg-active: rgba(var(--custom_color-2-rgb),.6);
         --button-text: rgba(255,255,255,.5);        
         --button-text-hover: rgba(255,255,255,.75);        
         --button-text-active: rgba(255,255,255,1);        
         --text-color: white;
         --body-bg: 
                 linear-gradient(
-                rgba(var(--rggd-5-rgb),.2),
-                rgba(var(--rggd-5-rgb),.2)), 
+                rgba(var(--custom_color-5-rgb),.2),
+                rgba(var(--custom_color-5-rgb),.2)), 
                 hsl(0 0% 8%);
         --header-footer-bg: 
                 linear-gradient(
-                rgba(var(--rggd-5-rgb),.13),
-                rgba(var(--rggd-5-rgb),.13)), 
+                rgba(var(--custom_color-5-rgb),.13),
+                rgba(var(--custom_color-5-rgb),.13)), 
                 hsl(0 0% 7%);
         --header-footer-inner-bg: none;
         --header-footer-inner-left-bg: none;
@@ -62,8 +62,8 @@ button:active, .button:active {
         --resume-text-inner-bg: none;
         --card-bg: 
                 linear-gradient(
-                rgba(var(--rggd-5-rgb),.1),
-                rgba(var(--rggd-5-rgb),.1)), 
+                rgba(var(--custom_color-5-rgb),.1),
+                rgba(var(--custom_color-5-rgb),.1)), 
                 hsl(0 0% 20%);
         --card-image-bg: hotpink;
         --card-image-img-bg: hotpink;
@@ -118,8 +118,8 @@ button:active, .button:active {
         --text-color: rgb(92, 43, 67);
         --body-bg: 
                 linear-gradient(
-                rgba(var(--rggd-1-rgb),.1),
-                rgba(var(--rggd-1-rgb),.1)), 
+                rgba(var(--custom_color-1-rgb),.1),
+                rgba(var(--custom_color-1-rgb),.1)), 
                 rgb(40, 40, 40);
         --header-footer-bg: red;
         --header-footer-inner-bg: pink;
@@ -136,8 +136,8 @@ button:active, .button:active {
 
         --card-bg: 
                 linear-gradient(
-                rgba(var(--rggd-1-rgb),.1),
-                rgba(var(--rggd-1-rgb),.1)), 
+                rgba(var(--custom_color-1-rgb),.1),
+                rgba(var(--custom_color-1-rgb),.1)), 
                 rgb(50, 50, 50);
         --image-modal-and-card-text: rgb(210, 210, 210);
         --card-image-bg: orange;
