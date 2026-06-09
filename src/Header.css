@@ -159,8 +159,9 @@ body.menu-open .header {
         padding: 0;
         text-indent: 45px;
         box-sizing: border-box;
+        font-size: 16px; /* iOS zooms on focus when input font-size < 16px */
 }
-.email-button-wrapper { 
+.email-button-wrapper {
         width: 100%; 
         box-sizing: border-box; 
         padding: 0; 
