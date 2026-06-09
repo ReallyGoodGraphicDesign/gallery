@@ -24,6 +24,14 @@ function updateScrollbarCompensation() {
   // Cache a realistic scrollbar width (0 on overlay-scrollbar systems)
   const sbw = measureScrollbarWidth();
   root.style.setProperty('--sbw', `${sbw}px`);
+  // If the splash (login) UI is present, avoid pre-compensating.
+  // This keeps the splash perfectly centered while preserving the normal
+  // scrollbar behavior for the main gallery when the splash is gone.
+  if (document.querySelector('.splash')) {
+    root.classList.remove('no-scroll');
+    return;
+  }
+
   if (needsScroll) {
     // Scrollbar is present → remove pre-compensation
     root.classList.remove('no-scroll');

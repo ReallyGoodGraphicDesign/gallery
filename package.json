@@ -22,7 +22,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "dev:full": "wrangler pages dev -- npm run dev",
+    "dev:full": "wrangler pages dev --proxy 5173 -- npm run dev -- --port 5173 --strictPort",
     "build": "vite build",
     "preview": "vite preview",
     "generate-colors": "node scripts/generate-colors.js"
