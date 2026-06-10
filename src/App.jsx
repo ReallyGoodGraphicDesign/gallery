@@ -176,7 +176,7 @@ function App() {
       if (res.ok) {
         setAuthed(true);
       } else {
-        alert("No");
+        alert("Wrong password.");
       }
     } catch {
       alert("Something went wrong. Try again.");
