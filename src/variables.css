@@ -33,7 +33,7 @@ button:active, .button:active {
         --funtime-input-bg: var(--menu-modal-search-input-bg);
         --input-and-button-bg: none;
 
-        --button-bg: rgba(var(--custom_color-5-rgb),.25);
+        --button-bg: rgba(var(--custom_color-5-rgb),.2);
         --button-bg-hover: rgba(var(--custom_color-1-rgb),.6);
         --button-bg-active: rgba(var(--custom_color-2-rgb),.6);
         --button-text: rgba(255,255,255,.5);        

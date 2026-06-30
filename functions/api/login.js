@@ -22,11 +22,12 @@ export async function onRequestPost({ request, env }) {
   }
 
   const token = await createToken(env.SESSION_SECRET);
+  const isSecure = new URL(request.url).protocol === "https:";
   return new Response(JSON.stringify({ ok: true }), {
     status: 200,
     headers: {
       "Content-Type": "application/json",
-      "Set-Cookie": sessionCookie(token),
+      "Set-Cookie": sessionCookie(token, { secure: isSecure }),
     },
   });
 }

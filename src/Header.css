@@ -173,6 +173,7 @@ body.menu-open .header {
         box-sizing: border-box;
         padding: 4px 0 !important; 
         text-align: center;
+		background-color: var(--button-bg);
 }
 .bi-envelope {
         font-size: 2rem;

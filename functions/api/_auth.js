@@ -85,7 +85,10 @@ export function getCookie(request, name) {
 }
 
 // Build the Set-Cookie header value for a session (or to clear one).
-export function sessionCookie(token, { clear = false } = {}) {
+// Only mark cookies Secure for HTTPS requests; local Pages dev runs over HTTP,
+// and browsers reject Secure cookies there.
+export function sessionCookie(token, { clear = false, secure = false } = {}) {
   const maxAge = clear ? 0 : SESSION_TTL_SECONDS;
-  return `${COOKIE_NAME}=${clear ? "" : token}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=${maxAge}`;
+  const secureAttr = secure ? "; Secure" : "";
+  return `${COOKIE_NAME}=${clear ? "" : token}; HttpOnly${secureAttr}; SameSite=Lax; Path=/; Max-Age=${maxAge}`;
 }
