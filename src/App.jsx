@@ -8,8 +8,8 @@ import LoadingSkeleton from "./LoadingSkeleton.jsx";
 import { useEffect, useState } from "react";
 
  const BANNERS = [ // ORDER MATTERS HERE
-   "logo-03",
    "logo-01",
+   "logo-03",
    "logo-02",
    "logo-04",
    "logo-05",
@@ -34,17 +34,7 @@ function App() {
   const [authed, setAuthed] = useState(false);
   const [input, setInput] = useState("");
 
-     const [banner, setBanner] = useState(() => {
-     const saved =
-       typeof window !== "undefined" &&
-       window.localStorage &&
-       window.localStorage.getItem("theme-banner");
-
-     const attr =
-       typeof document !== "undefined" &&
-       document.documentElement.getAttribute("data-theme-banner");
-     return saved || attr || BANNERS[0];
-   });
+     const [banner] = useState(BANNERS[0]);
   
   // 👇 ask the server once, on mount, whether we already have a valid session
   useEffect(() => {
@@ -63,12 +53,6 @@ function App() {
        window.localStorage.setItem("theme-banner", banner);
      }
    }, [banner]);
-
-   const advanceBanner = () => {
-     const idx = BANNERS.indexOf(banner);
-     const next = BANNERS[(idx + 1) % BANNERS.length];
-     setBanner(next);
-   };
 
   // 2. app hooks
   const [cardData, setCardData] = useState([]);
@@ -188,11 +172,7 @@ function App() {
     return (
       <div className="splash">
          <div className="logo-carousel-wrapper">
-                <button className="logo-carousel-image logo-carousel-button"
-                type="button"
-                onClick={advanceBanner}
-                aria-label="Next" 
-                title="Tap to change banner" />
+                <div className="logo-carousel-image" />
          </div>
          <div className="funtime-all"> 
         <h3>Password</h3>
