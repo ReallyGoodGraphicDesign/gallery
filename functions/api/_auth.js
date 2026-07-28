@@ -39,8 +39,8 @@ async function hmacKey(secret) {
 }
 
 // Create a signed session token that expires in SESSION_TTL_SECONDS. Any extra
-// claims (e.g. { collection: "admin" }) are folded into the signed payload, so
-// the client cannot read or forge them.
+// claims (e.g. { access: "admin" }) are folded into the signed payload, so the
+// client cannot read or forge them.
 export async function createToken(secret, claims = {}) {
   const payload = { ...claims, exp: Date.now() + SESSION_TTL_SECONDS * 1000 };
   const payloadB64 = bytesToB64url(encoder.encode(JSON.stringify(payload)));
@@ -50,7 +50,7 @@ export async function createToken(secret, claims = {}) {
 }
 
 // Verify signature AND expiry, returning the decoded payload on success or null
-// on any failure. Callers that need the collection claim use this; callers that
+// on any failure. Callers that need the access claim use this; callers that
 // only need a yes/no use verifyToken below.
 export async function readToken(secret, token) {
   if (!secret || !token || typeof token !== "string") return null;

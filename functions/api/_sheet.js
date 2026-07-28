@@ -1,16 +1,17 @@
 // Shared helpers for reading the gallery metadata sheet and reasoning about
-// collection membership. Imported by data.js and image/[[path]].js.
+// access. Imported by data.js and image/[[path]].js.
 //
 // Starts with "_" and exports no onRequest handler, so Pages does not treat it
 // as a route — it is only imported by the real route files.
 //
-// Membership model: each sheet row has a `collections` cell holding zero or
-// more space-separated collection names (e.g. "admin test"). An image belongs
-// to a collection if that name appears in the cell. Comparison is
-// case-insensitive; names themselves never contain spaces.
+// Access model: each sheet row has an `access` cell holding zero or more
+// space-separated access labels (e.g. "admin test"). A passcode is mapped to
+// one such label in the GALLERY_PASSCODES secret; the passcode can see an image
+// only if its label appears in that image's `access` cell. Comparison is
+// case-insensitive; labels themselves never contain spaces.
 
 // Fetch the metadata sheet JSON. Uses Cloudflare's edge cache so a gallery load
-// of hundreds of images (each of which must be membership-checked) collapses to
+// of hundreds of images (each of which must be access-checked) collapses to
 // roughly one origin request every SHEET_CACHE_TTL seconds instead of one per
 // image. Apps Script 302-redirects to script.googleusercontent.com; fetch
 // follows redirects by default.
@@ -25,24 +26,24 @@ export async function fetchSheet(env) {
   return res.json();
 }
 
-// The set of collection names a row belongs to, lowercased. Tolerates missing
-// cells and any run of whitespace between names.
-export function rowCollections(row) {
-  return String(row && row.collections != null ? row.collections : "")
+// The access labels a row carries, lowercased. Tolerates missing cells and any
+// run of whitespace between labels.
+export function rowAccessLabels(row) {
+  return String(row && row.access != null ? row.access : "")
     .toLowerCase()
     .split(/\s+/)
     .filter(Boolean);
 }
 
-// Does this row belong to the given collection? Case-insensitive.
-export function rowInCollection(row, collection) {
-  if (!collection) return false;
-  return rowCollections(row).includes(String(collection).toLowerCase());
+// Does this row grant access to the given label? Case-insensitive.
+export function rowHasAccess(row, access) {
+  if (!access) return false;
+  return rowAccessLabels(row).includes(String(access).toLowerCase());
 }
 
 // Turn a sheet image path into the R2 object key the image route receives.
 // The sheet stores ".../images/large/Foo.webp"; the R2 key is "large/Foo.webp".
-// Mirrors the key derivation in the image route so membership checks line up.
+// Mirrors the key derivation in the image route so access checks line up.
 export function keyFromPath(p) {
   if (typeof p !== "string" || !p) return null;
   const marker = "images/";
@@ -51,12 +52,12 @@ export function keyFromPath(p) {
   return key || null;
 }
 
-// Build the set of R2 keys (all four sizes) reachable with the given collection.
-export async function allowedKeys(env, collection) {
+// Build the set of R2 keys (all four sizes) reachable with the given access label.
+export async function allowedKeys(env, access) {
   const rows = await fetchSheet(env);
   const keys = new Set();
   for (const row of rows) {
-    if (!rowInCollection(row, collection)) continue;
+    if (!rowHasAccess(row, access)) continue;
     for (const p of [row.imageTiny, row.imageSmall, row.imageMedium, row.imageLarge]) {
       const k = keyFromPath(p);
       if (k) keys.add(k);

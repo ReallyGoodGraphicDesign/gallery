@@ -1,12 +1,12 @@
 // POST /api/login  { password }
 // Checks the typed passcode against the GALLERY_PASSCODES secret and, on a
-// match, sets a signed HttpOnly session cookie carrying that passcode's
-// collection name.
+// match, sets a signed HttpOnly session cookie carrying that passcode's access
+// label.
 //
-// GALLERY_PASSCODES is a JSON object mapping each passcode to the single
-// collection it unlocks, e.g. {"s3cret-a":"family","s3cret-b":"clients"}.
-// It lives only in the server-side secret — never in the sheet or the bundle —
-// so the passcode <-> collection link exists in exactly one place.
+// GALLERY_PASSCODES is a JSON object mapping each passcode to the single access
+// label it unlocks, e.g. {"s3cret-a":"family","s3cret-b":"clients"}. It lives
+// only in the server-side secret — never in the sheet or the bundle — so the
+// passcode <-> access-label link exists in exactly one place.
 
 import { createToken, sessionCookie } from "./_auth.js";
 
@@ -34,15 +34,15 @@ export async function onRequestPost({ request, env }) {
 
   const passcode = body && typeof body.password === "string" ? body.password : "";
   // Exact-match lookup: passcodes are secrets, so they are case-sensitive.
-  const collection =
+  const access =
     passcode && Object.prototype.hasOwnProperty.call(passcodes, passcode)
       ? passcodes[passcode]
       : null;
-  if (!collection || typeof collection !== "string") {
+  if (!access || typeof access !== "string") {
     return json({ ok: false }, 401);
   }
 
-  const token = await createToken(env.SESSION_SECRET, { collection });
+  const token = await createToken(env.SESSION_SECRET, { access });
   const isSecure = new URL(request.url).protocol === "https:";
   return new Response(JSON.stringify({ ok: true }), {
     status: 200,
