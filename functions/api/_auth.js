@@ -38,20 +38,24 @@ async function hmacKey(secret) {
   );
 }
 
-// Create a signed session token that expires in SESSION_TTL_SECONDS.
-export async function createToken(secret) {
-  const payload = { exp: Date.now() + SESSION_TTL_SECONDS * 1000 };
+// Create a signed session token that expires in SESSION_TTL_SECONDS. Any extra
+// claims (e.g. { collection: "admin" }) are folded into the signed payload, so
+// the client cannot read or forge them.
+export async function createToken(secret, claims = {}) {
+  const payload = { ...claims, exp: Date.now() + SESSION_TTL_SECONDS * 1000 };
   const payloadB64 = bytesToB64url(encoder.encode(JSON.stringify(payload)));
   const key = await hmacKey(secret);
   const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(payloadB64));
   return `${payloadB64}.${bytesToB64url(sig)}`;
 }
 
-// Verify signature AND expiry. Returns true only if both pass.
-export async function verifyToken(secret, token) {
-  if (!secret || !token || typeof token !== "string") return false;
+// Verify signature AND expiry, returning the decoded payload on success or null
+// on any failure. Callers that need the collection claim use this; callers that
+// only need a yes/no use verifyToken below.
+export async function readToken(secret, token) {
+  if (!secret || !token || typeof token !== "string") return null;
   const [payloadB64, sigB64] = token.split(".");
-  if (!payloadB64 || !sigB64) return false;
+  if (!payloadB64 || !sigB64) return null;
 
   const key = await hmacKey(secret);
   // crypto.subtle.verify is constant-time, so this is safe against timing attacks.
@@ -61,14 +65,20 @@ export async function verifyToken(secret, token) {
     b64urlToBytes(sigB64),
     encoder.encode(payloadB64)
   );
-  if (!valid) return false;
+  if (!valid) return null;
 
   try {
     const payload = JSON.parse(new TextDecoder().decode(b64urlToBytes(payloadB64)));
-    return typeof payload.exp === "number" && Date.now() < payload.exp;
+    if (typeof payload.exp !== "number" || Date.now() >= payload.exp) return null;
+    return payload;
   } catch {
-    return false;
+    return null;
   }
+}
+
+// Verify signature AND expiry. Returns true only if both pass.
+export async function verifyToken(secret, token) {
+  return (await readToken(secret, token)) !== null;
 }
 
 // Pull a single cookie value out of the request's Cookie header.

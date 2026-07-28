@@ -1,30 +1,35 @@
 // GET /api/data
-// Gated proxy for the gallery metadata. Verifies the session cookie, then
-// fetches the Google Apps Script endpoint server-side and returns its JSON.
-// The upstream URL lives in the SHEET_URL secret, so it never ships in the
-// client bundle and the data is only reachable with a valid session.
+// Gated proxy for the gallery metadata. Verifies the session cookie, reads the
+// collection it grants, then returns only the sheet rows tagged with that
+// collection. The upstream URL lives in the SHEET_URL secret, so it never ships
+// in the client bundle and the data is only reachable with a valid session.
 
-import { verifyToken, getCookie, COOKIE_NAME } from "./_auth.js";
+import { readToken, getCookie, COOKIE_NAME } from "./_auth.js";
+import { fetchSheet, rowInCollection } from "./_sheet.js";
 
 export async function onRequestGet({ request, env }) {
-  if (!(await verifyToken(env.SESSION_SECRET, getCookie(request, COOKIE_NAME)))) {
+  const session = await readToken(env.SESSION_SECRET, getCookie(request, COOKIE_NAME));
+  if (!session) {
     return new Response("Unauthorized", { status: 401 });
   }
   if (!env.SHEET_URL) {
     return new Response("Server not configured", { status: 500 });
   }
 
-  // Apps Script 302-redirects to script.googleusercontent.com; fetch follows
-  // redirects by default.
-  const upstream = await fetch(env.SHEET_URL, {
-    headers: { Accept: "application/json" },
-  });
-  if (!upstream.ok) {
+  let rows;
+  try {
+    rows = await fetchSheet(env);
+  } catch {
     return new Response("Upstream error", { status: 502 });
   }
 
-  const body = await upstream.text();
-  return new Response(body, {
+  // Keep only rows in this session's collection, and drop the `collections`
+  // field so the client never learns which other collections an image is in.
+  const visible = rows
+    .filter((row) => rowInCollection(row, session.collection))
+    .map(({ collections, ...rest }) => rest);
+
+  return new Response(JSON.stringify(visible), {
     status: 200,
     headers: {
       "Content-Type": "application/json",

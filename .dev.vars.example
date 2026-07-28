@@ -3,8 +3,10 @@
 # These only affect your LOCAL machine — production uses the Cloudflare dashboard
 # secrets, which are completely separate.
 
-# Any value you like — this is the password you'll type on the local login screen.
-GALLERY_PASSWORD=localdev
+# JSON map of passcode -> the single collection it unlocks. Type one of these
+# passcodes on the local login screen to view that collection. The value must be
+# a collection NAME that appears in the sheet's `collections` column.
+GALLERY_PASSCODES={"admin":"admin","test":"test"}
 
 # Any random string. Only signs local session cookies; need not match production.
 SESSION_SECRET=local-only-change-me

@@ -1,14 +1,17 @@
 // GET /api/image/<size>/<filename>.webp
-// The gate: verifies the session cookie, THEN streams the object from the
-// private R2 bucket (binding: IMAGES). Without a valid cookie you get 401 and
-// never reach the file — there is no public URL for these images anymore.
+// The gate: verifies the session cookie AND that the requested image belongs to
+// the session's collection, THEN streams the object from the private R2 bucket
+// (binding: IMAGES). Without a valid cookie you get 401; with a valid cookie for
+// a different collection you get 404 — either way you never reach the file, and
+// there is no public URL for these images.
 
-import { verifyToken, getCookie, COOKIE_NAME } from "../_auth.js";
+import { readToken, getCookie, COOKIE_NAME } from "../_auth.js";
+import { allowedKeys } from "../_sheet.js";
 
 export async function onRequestGet({ request, env, params }) {
-  // 1. auth
-  const token = getCookie(request, COOKIE_NAME);
-  if (!(await verifyToken(env.SESSION_SECRET, token))) {
+  // 1. auth — must have a valid session with a collection
+  const session = await readToken(env.SESSION_SECRET, getCookie(request, COOKIE_NAME));
+  if (!session) {
     return new Response("Unauthorized", { status: 401 });
   }
 
@@ -26,7 +29,20 @@ export async function onRequestGet({ request, env, params }) {
     return new Response("Bad request", { status: 400 });
   }
 
-  // 4. fetch from R2 and stream back
+  // 4. authorize the key against the session's collection. Membership lives in
+  // the sheet, not the path, so we resolve the collection's reachable keys
+  // (edge-cached) and treat anything outside that set as if it doesn't exist.
+  let keys;
+  try {
+    keys = await allowedKeys(env, session.collection);
+  } catch {
+    return new Response("Upstream error", { status: 502 });
+  }
+  if (!keys.has(key)) {
+    return new Response("Not found", { status: 404 });
+  }
+
+  // 5. fetch from R2 and stream back
   const object = await env.IMAGES.get(key);
   if (!object) {
     return new Response("Not found", { status: 404 });
