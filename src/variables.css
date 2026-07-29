@@ -77,7 +77,7 @@ button:active, .button:active {
         --menu-modal-search-wrapper-bg: none;        
         --menu-modal-input-reset-bg: none;
         --menu-modal-search-input-bg: var(--button-bg);
-        --menu-modal-search-input-text: white;
+        --menu-modal-search-input-text: rgb(210, 210, 210);
 
 
         --image-modal-overlay-div-bg: rgb(128,128,128);

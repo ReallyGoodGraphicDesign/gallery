@@ -121,7 +121,7 @@ body.menu-open .header {
 .menu-inner {
         max-width: 1000px;       
         width: 100%;
-        display: grid;
+        display: flex;
         gap: 8px;
         margin: 0 auto;         
         border-radius: 0;
@@ -134,6 +134,41 @@ body.menu-open .header {
 @keyframes menuSlide {
   from { transform: translateY(-8px); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
+}
+/* Each of the three menu-inner children takes exactly one-third, so their
+   edges line up with the 3-column .card-grid below (same max-width, padding,
+   and 8px gap). min-width:0 lets the search input/select shrink to fit. */
+.menu-inner > .menu-modal-category-wrapper,
+.menu-inner > .menu-modal-input-reset,
+.menu-inner > .email-button-wrapper {
+        flex: 1 1 0;
+        min-width: 0;
+}
+/* Tablet (grid is 2 wide): dropdown + search share one 50/50 row, email
+   drops to its own full-width row below. calc(50% - 4px) accounts for the
+   8px gap so two items fit exactly on the first row. */
+@media (min-width: 601px) and (max-width: 1024px) {
+.menu-inner {
+        flex-wrap: wrap;
+}
+.menu-inner > .menu-modal-category-wrapper,
+.menu-inner > .menu-modal-input-reset {
+        flex: 1 1 calc(50% - 4px);
+}
+.menu-inner > .email-button-wrapper {
+        flex: 1 1 100%;
+}
+}
+/* Small (grid is 1 wide): each control on its own full-width row. */
+@media (max-width: 600px) {
+.menu-inner {
+        flex-wrap: wrap;
+}
+.menu-inner > .menu-modal-category-wrapper,
+.menu-inner > .menu-modal-input-reset,
+.menu-inner > .email-button-wrapper {
+        flex: 1 1 100%;
+}
 }
 .menu-modal-search-wrapper {
         background: var(--menu-modal-search-wrapper-bg);
@@ -155,13 +190,14 @@ body.menu-open .header {
         width: 100%;
         vertical-align: middle;
         border-radius: 4px;
-        margin: 0 0 0 0px;
+        margin: 0;
         padding: 0;
-        text-indent: 45px;
+        text-indent: 8px;
         box-sizing: border-box;
         font-size: 16px; /* iOS zooms on focus when input font-size < 16px */
 }
 .menu-modal-category-wrapper {
+        position: relative; /* anchor for the custom caret */
         width: 100%;
         box-sizing: border-box;
 }
@@ -172,10 +208,30 @@ body.menu-open .header {
         height: 40px;
         width: 100%;
         border-radius: 4px;
-        padding: 0 10px;
+        margin: 0;
+        padding: 0;
+        padding-right: 32px; /* room for the custom caret */
+        text-indent: 8px;
         box-sizing: border-box;
         font-size: 16px; /* iOS zooms on focus when input font-size < 16px */
         cursor: pointer;
+        /* Remove the browser's native dropdown arrow so ours is consistent
+           across Chrome/Safari/Firefox. */
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+}
+.menu-modal-category-select::-ms-expand { display: none; } /* legacy Edge/IE */
+.category-caret {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none; /* clicks pass through to the select */
+        color: var(--menu-modal-search-input-text);
+        opacity: .5;
+        font-size: 1rem;
+        line-height: 1;
 }
 .menu-modal-category-select:focus {
         box-shadow: none;
@@ -217,6 +273,7 @@ body.menu-open .header {
         top: 50%;
         transform: translateY(-50%);
         display: inline-flex;
+        display: none;
 }
 .search-icon {
         padding: 0; /* left pad for icon */

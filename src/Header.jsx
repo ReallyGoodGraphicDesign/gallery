@@ -69,6 +69,7 @@ return (
                                         <option key={c} value={c}>{c}</option>
                                         ))}
                                 </select>
+                                <i className="category-caret bi bi-chevron-down" aria-hidden="true"></i>
                         </div>
                         )}
                         <div className="menu-modal-input-reset">
@@ -77,7 +78,7 @@ return (
                                                 <i className="search-icon bi bi-search"></i>
                                         </span>
                                         <input className="menu-modal-search-input"
-                                        ref={inputRef} type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                                        ref={inputRef} type="text" placeholder="Enter search terms here" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                                 </div>
                                 <button className={`button reset-button ${searchTerm.length > 0 ? "visible" : "hidden"}`}
                                 onClick={() => setSearchTerm("")}>
