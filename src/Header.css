@@ -161,6 +161,27 @@ body.menu-open .header {
         box-sizing: border-box;
         font-size: 16px; /* iOS zooms on focus when input font-size < 16px */
 }
+.menu-modal-category-wrapper {
+        width: 100%;
+        box-sizing: border-box;
+}
+.menu-modal-category-select {
+        background: var(--menu-modal-search-input-bg);
+        color: var(--menu-modal-search-input-text);
+        border: none;
+        height: 40px;
+        width: 100%;
+        border-radius: 4px;
+        padding: 0 10px;
+        box-sizing: border-box;
+        font-size: 16px; /* iOS zooms on focus when input font-size < 16px */
+        cursor: pointer;
+}
+.menu-modal-category-select:focus {
+        box-shadow: none;
+        border: none;
+        outline: none;
+}
 .email-button-wrapper {
         width: 100%; 
         box-sizing: border-box; 

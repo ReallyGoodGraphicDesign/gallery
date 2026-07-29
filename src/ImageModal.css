@@ -230,7 +230,7 @@
 
 /* X X X X X X X X X X X X X X X X X X X X X X X X X X */
 
-.image-modal-back-and-forward-div {   
+.image-modal-back-and-forward-div {    
         opacity: 1;
         background-color: var(--image-modal-back-and-forward-div-bg);
         height: 100%;

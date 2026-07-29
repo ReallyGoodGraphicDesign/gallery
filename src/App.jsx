@@ -5,7 +5,7 @@ import Header from "./Header.jsx";
 import Card from "./Card.jsx";
 import ImageModal from "./ImageModal.jsx";
 import LoadingSkeleton from "./LoadingSkeleton.jsx";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
  const BANNERS = [ // ORDER MATTERS HERE
    "logo-01",
@@ -58,6 +58,7 @@ function App() {
   const [cardData, setCardData] = useState([]);
   const [filteredCardData, setFilteredCardData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(""); // "" = All
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -98,7 +99,29 @@ function App() {
       .finally(() => setLoading(false));
   }, [authed]);
 
-  // search filter
+  // Split a `category` cell into trimmed, non-empty names (comma-separated).
+  const splitCategories = (v) =>
+    typeof v === "string"
+      ? v.split(",").map((s) => s.trim()).filter(Boolean)
+      : [];
+
+  // Dropdown options: the distinct category names across the loaded cards,
+  // deduped case-insensitively (first-seen casing wins) and sorted A–Z. Because
+  // the client only holds rows this passcode can access, the list auto-scopes.
+  const categoryOptions = useMemo(() => {
+    const byLower = new Map(); // lowercased name -> display name
+    for (const card of cardData) {
+      for (const name of splitCategories(card.category)) {
+        const key = name.toLowerCase();
+        if (!byLower.has(key)) byLower.set(key, name);
+      }
+    }
+    return [...byLower.values()].sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: "base" })
+    );
+  }, [cardData]);
+
+  // combined filter: category (single-select) AND search term
   useEffect(() => {
     const toText = (v, fieldName, card) => {
       if (v == null) return "";
@@ -115,18 +138,22 @@ function App() {
     };
 
     const term = searchTerm.toLowerCase();
+    const cat = selectedCategory.toLowerCase();
 
-    if (searchTerm === "") {
-      setFilteredCardData(cardData);
-    } else {
-      const results = cardData.filter((card) =>
-        ["headline", "filename", "description", "keywords"].some((field) =>
-          toText(card[field], field, card).includes(term)
-        )
+    const matchesCategory = (card) =>
+      cat === "" ||
+      splitCategories(card.category).some((n) => n.toLowerCase() === cat);
+
+    const matchesSearch = (card) =>
+      term === "" ||
+      ["headline", "filename", "description", "keywords"].some((field) =>
+        toText(card[field], field, card).includes(term)
       );
-      setFilteredCardData(results);
-    }
-  }, [searchTerm, cardData]);
+
+    setFilteredCardData(
+      cardData.filter((card) => matchesCategory(card) && matchesSearch(card))
+    );
+  }, [searchTerm, selectedCategory, cardData]);
 
   const asText = (v) => {
     if (v == null) return "";
@@ -195,7 +222,13 @@ function App() {
 
   return (
     <div className="App">
-      <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <Header
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        categoryOptions={categoryOptions}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+      />
       <main>
         {loading ? (
           <LoadingSkeleton />
