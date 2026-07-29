@@ -69,7 +69,7 @@ return (
                                         <option key={c} value={c}>{c}</option>
                                         ))}
                                 </select>
-                                <i className="category-caret bi bi-chevron-down" aria-hidden="true"></i> 
+                                <i className="category-caret bi bi-chevron-down" aria-hidden="true"></i>  
                         </div>
                         )}
                         <div className="menu-modal-input-reset">
