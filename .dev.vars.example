@@ -5,8 +5,16 @@
 
 # JSON map of passcode -> the single access label it unlocks. Type one of these
 # passcodes on the local login screen to view whatever that label can access.
-# The value must be an access label that appears in the sheet's `access` column.
-GALLERY_PASSCODES={"admin":"admin","test":"test"}
+#
+# The LABEL (the value) must appear in the sheet's `access` column, or login
+# succeeds but the gallery renders empty -- there is no error, just no images.
+# The live labels are: admin (all images), user1, user2.
+#
+# The PASSCODE (the key) is local-only and should NOT match production. It is
+# just a lookup key; behaviour is decided entirely by the label, so reusing the
+# real passcodes buys no extra fidelity while copying production secrets onto
+# disk. Use throwaway strings like these.
+GALLERY_PASSCODES={"local-admin":"admin","local-user1":"user1","local-user2":"user2"}
 
 # Any random string. Only signs local session cookies; need not match production.
 SESSION_SECRET=local-only-change-me

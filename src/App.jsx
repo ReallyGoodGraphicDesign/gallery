@@ -27,7 +27,9 @@ import { useEffect, useMemo, useState } from "react";
 ];
 
 // Auth is now handled server-side by Pages Functions (/api/login, /api/session).
-// The password lives in the GALLERY_PASSWORD secret, never in this bundle.
+// Passcodes live in the GALLERY_PASSCODES secret, never in this bundle. Each
+// passcode maps to one access label, which decides the images this session can
+// see; the label travels in a signed HttpOnly cookie the client cannot read.
 
 function App() {
   // 1. auth hooks

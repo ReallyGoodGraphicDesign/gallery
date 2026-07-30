@@ -21,7 +21,9 @@
     "wrangler": "^4.98.0"
   },
   "scripts": {
+    "predev": "lsof -nP -tiTCP:5173 -sTCP:LISTEN | xargs kill -9; exit 0",
     "dev": "vite",
+    "predev:full": "lsof -nP -tiTCP:5173 -sTCP:LISTEN | xargs kill -9; lsof -nP -tiTCP:8788 -sTCP:LISTEN | xargs kill -9; exit 0",
     "dev:full": "wrangler pages dev --proxy 5173 -- npm run dev -- --port 5173 --strictPort",
     "build": "vite build",
     "preview": "vite preview",

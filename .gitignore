@@ -27,7 +27,11 @@ yarn-error.log*
 Ignore/
 
 # Local wrangler / Pages dev
-.dev.vars
+# Glob, not an exact match, so editor/backup sidecars (.dev.vars.bak, ~, .swp,
+# "copy") can never carry local secrets into this public repo. The template is
+# re-included below.
+.dev.vars*
+!.dev.vars.example
 .wrangler/
 # Local-only dev config (remote R2 binding). Kept out of the repo so the
 # Cloudflare production build keeps using its dashboard config untouched.

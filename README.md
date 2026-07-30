@@ -1,70 +1,56 @@
-# Getting Started with Create React App
+# Gallery
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A passcode-gated image gallery: a Vite + React SPA served by Cloudflare Pages,
+with Pages Functions in `functions/api/` gating both the metadata and the image
+bytes. Images live in a private R2 bucket and have no public URL.
 
-## Available Scripts
+## Local development
 
-In the project directory, you can run:
+```sh
+npm install
+cp .dev.vars.example .dev.vars   # then fill in the real values
+npm run dev:full                 # http://localhost:8788
+```
 
-### `npm start`
+- `npm run dev:full` runs `wrangler pages dev` in front of Vite, so the
+  `/api/*` Functions and the R2 image binding work. **Use this for anything
+  touching login or images.**
+- `npm run dev` runs Vite alone on port 5173. Faster, but every `/api/*` call
+  404s, so the gallery cannot log in.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+`.dev.vars` holds your local secrets and is gitignored — see
+[`.dev.vars.example`](.dev.vars.example) for the three required variables and
+their formats. Without it, login returns a 500 "Server not configured".
+Wrangler reads the file at startup, so restart `dev:full` after editing it.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Both scripts kill anything already listening on their ports first (via the
+`predev` / `predev:full` hooks), so a stale dev server from a previous session
+can't wedge the next start.
 
-### `npm test`
+### Access model
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Each passcode maps to exactly one access label; each image row in the sheet
+carries zero or more space-separated labels in its `access` column. A session
+sees an image only if its label appears in that image's cell — enforced twice,
+once for metadata (`/api/data`) and again for the bytes (`/api/image/*`).
 
-### `npm run build`
+The passcode → label map lives only in the `GALLERY_PASSCODES` secret, so the
+link between a passcode and what it unlocks exists in exactly one place. The
+label travels in a signed HttpOnly cookie the client can neither read nor forge.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Scripts
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+| Script | Does |
+| --- | --- |
+| `npm run dev:full` | Full stack: Functions + R2 + Vite, on `:8788` |
+| `npm run dev` | Vite only, on `:5173` (no `/api/*`) |
+| `npm run build` | Production build to `dist/` |
+| `npm run preview` | Serve the built `dist/` locally |
+| `npm run generate-colors` | Regenerate `src/generated-colors.css` from `src/colors-rggd.ase` |
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Deployment
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Cloudflare Pages builds and deploys from the repo. Production secrets and
+bindings come from the Cloudflare dashboard and are entirely separate from
+`.dev.vars`; `wrangler.jsonc` is local-only and gitignored, so it never affects
+the production build.
