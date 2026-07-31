@@ -3,6 +3,7 @@ import "./LoadingSkeleton.css";
 import Header from "./Header.jsx";
 // import ResumeText from "./ResumeText"; 
 import Card from "./Card.jsx";
+import CategoryCard from "./CategoryCard.jsx";
 import ImageModal from "./ImageModal.jsx";
 import LoadingSkeleton from "./LoadingSkeleton.jsx";
 import { useEffect, useMemo, useState } from "react";
@@ -63,6 +64,9 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState(""); // "" = All
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [loading, setLoading] = useState(true);
+  // Which screen we're on. Kept separate from selectedCategory because that
+  // already uses "" to mean "every image" — it can't also mean "choosing".
+  const [view, setView] = useState("categories"); // "categories" | "images"
 
   // fetch data — only after login, since /api/data requires a valid session.
   // The Google Apps Script URL now lives server-side in the SHEET_URL secret.
@@ -110,18 +114,82 @@ function App() {
   // Dropdown options: the distinct category names across the loaded cards,
   // deduped case-insensitively (first-seen casing wins) and sorted A–Z. Because
   // the client only holds rows this passcode can access, the list auto-scopes.
-  const categoryOptions = useMemo(() => {
-    const byLower = new Map(); // lowercased name -> display name
+  // Any non-empty `cover` cell marks that row as its category's cover image.
+  // Kept loose on purpose so the sheet can use x / TRUE / 1 interchangeably.
+  const isCoverFlag = (v) => {
+    if (v === true) return true;
+    if (typeof v === "number") return v !== 0;
+    if (typeof v !== "string") return false;
+    const s = v.trim().toLowerCase();
+    return s !== "" && s !== "false" && s !== "0" && s !== "no";
+  };
+
+  // Parse a `cat_order` cell into a sort number, or null when there isn't one.
+  // Note Number("") is 0, which would sort an empty cell to the FRONT — hence
+  // the explicit empty check rather than a bare Number() call.
+  const toCatOrder = (v) => {
+    if (v == null) return null;
+    const s = String(v).trim();
+    if (s === "") return null;
+    const n = Number(s);
+    return Number.isFinite(n) ? n : null;
+  };
+
+  // The category chooser's tiles: one per distinct category among the loaded
+  // cards, deduped case-insensitively (first-seen casing wins) and sorted A–Z.
+  // Because cardData is already access-scoped, the chooser auto-scopes too.
+  const categoryCards = useMemo(() => {
+    const groups = new Map(); // lowercased name -> { name, cards }
     for (const card of cardData) {
       for (const name of splitCategories(card.category)) {
         const key = name.toLowerCase();
-        if (!byLower.has(key)) byLower.set(key, name);
+        if (!groups.has(key)) groups.set(key, { name, cards: [] });
+        groups.get(key).cards.push(card);
       }
     }
-    return [...byLower.values()].sort((a, b) =>
-      a.localeCompare(b, undefined, { sensitivity: "base" })
-    );
+    return [...groups.values()]
+      .map(({ name, cards }) => {
+        // Prefer a flagged cover, but only among rows THIS passcode can see —
+        // a cover flagged on a row they lack access to would 404 through the
+        // image route. Falling back to the first visible image means every
+        // tile always renders something real.
+        const cover = cards.find((c) => isCoverFlag(c.cover)) || cards[0];
+
+        // Sheet-driven tile order. Taking the MINIMUM across the rows this
+        // passcode can see means a single numbered row is enough, but filling
+        // the number down a category's whole block keeps its position even for
+        // a passcode that can't see the numbered row (as with California's
+        // admin-only cover). No number anywhere -> Infinity, i.e. sorts last.
+        const orders = cards
+          .map((c) => toCatOrder(c.cat_order))
+          .filter((n) => n !== null);
+        const order = orders.length ? Math.min(...orders) : Number.POSITIVE_INFINITY;
+
+        return { name, count: cards.length, imageTiny: cover?.imageTiny, order };
+      })
+      // Numbered tiles first in ascending order; everything unnumbered falls to
+      // the bottom and stays alphabetical among itself. So numbering only your
+      // top few categories works, and gaps (10, 20, 30) leave room to insert.
+      .sort((a, b) => {
+        if (a.order !== b.order) return a.order - b.order;
+        return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+      });
   }, [cardData]);
+
+  // Typing a search term should show results, not leave you staring at the
+  // chooser wondering why nothing happened.
+  const showingImages = view === "images" || searchTerm.trim() !== "";
+
+  const openCategory = (name) => {
+    setSelectedCategory(name);
+    setView("images");
+  };
+
+  const backToCategories = () => {
+    setSelectedCategory("");
+    setSearchTerm("");
+    setView("categories");
+  };
 
   // combined filter: category (single-select) AND search term
   useEffect(() => {
@@ -227,14 +295,46 @@ function App() {
       <Header
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
-        categoryOptions={categoryOptions}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
       />
       <main>
         {loading ? (
           <LoadingSkeleton />
+        ) : !showingImages ? (
+          <div className="card-grid">
+            {categoryCards.map((c) => (
+              <CategoryCard
+                key={c.name}
+                name={c.name}
+                count={c.count}
+                imageTiny={c.imageTiny}
+                onSelect={() => openCategory(c.name)}
+              />
+            ))}
+          </div>
         ) : filteredCardData.length > 0 ? (
+          <>
+          <div className="category-bar">
+            {/* Same classes as the header's menu button, so size, colour, hover
+                and active all come from the same rules rather than a copy that
+                can drift. The glyph is a chevron rather than that button's X:
+                this goes up a level to the chooser, it doesn't dismiss an
+                overlay. The label the text used to carry moves to aria-label.
+                First in the DOM, not just visually first, so reading order and
+                tab order match what's on screen. */}
+            <button type="button" className="button menu-toggle-button category-back-button"
+              onClick={backToCategories} aria-label="Back" title="Back">
+              <i className="bi bi-chevron-left"></i>
+            </button>
+            <p className="category-current">
+              {/* Without the All tile, "no category" is only reachable by
+                  searching from the chooser — so label it as a search. */}
+              {selectedCategory || (searchTerm.trim() ? "Search results" : "All images")}
+              {/* The gap around the bullet is CSS, not literal spaces: HTML
+                  collapses a run of spaces to one, so it can't be widened here. */}
+              <span className="category-current-sep">·</span>
+              {filteredCardData.length} {filteredCardData.length === 1 ? "image" : "images"}
+            </p>
+          </div>
           <div className="card-grid">
             {filteredCardData.map((card, idx) => (
               <Card
@@ -251,8 +351,18 @@ function App() {
               />
             ))}
           </div>
+          </>
         ) : (
           <div className="no-results">
+            {/* Same classes as the header's menu button, so size, colour, hover
+                and active all come from the same rules rather than a copy that
+                can drift. The glyph is a chevron rather than that button's X:
+                this goes up a level to the chooser, it doesn't dismiss an
+                overlay. The label the text used to carry moves to aria-label. */}
+            <button type="button" className="button menu-toggle-button category-back-button"
+              onClick={backToCategories} aria-label="Back" title="Back">
+              <i className="bi bi-chevron-left"></i>
+            </button>
             <p>No results found for your search term</p>
           </div>
         )}

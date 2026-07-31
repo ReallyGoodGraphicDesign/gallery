@@ -78,7 +78,7 @@
         flex-direction: row;
         justify-content: flex-start;
         align-items: center;
-        padding: 8px;
+        padding: 12px;
         gap: 12px; 
         box-sizing: border-box;
         border-radius: 0;
@@ -135,7 +135,7 @@
         align-items: flex-start;
         padding: 0;
         margin: 0;
-        gap: 8px;
+        gap: 12px;
         box-sizing: border-box;
         border-radius: none;
         flex: 0 0 auto;
@@ -238,7 +238,7 @@
         justify-content: space-between;
         align-items: flex-end;
         padding: 0;
-        gap: 8px;
+        gap: 12px;
         box-sizing: border-box;
         border-radius: 6px;
         pointer-events: none;
@@ -450,6 +450,15 @@
         overflow: hidden;
         padding: 12px;
         box-sizing: border-box;
+        /* It is a <button> so the immersive toggle is keyboard-operable; strip
+           the UA chrome so it still lays out exactly like the div it replaced. */
+        border: 0;
+        appearance: none;
+        -webkit-appearance: none;
+        font: inherit;
+        color: inherit;
+        text-align: inherit;
+        cursor: pointer;
 }
 @media (min-width: 601px) and (max-width: 1024px) {
 .image-modal-image-container-div {
@@ -467,6 +476,34 @@
 .image-modal-content-div.immersive .image-modal-image-container-div {
         cursor: zoom-out;
   }
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+/* This button is the image surface, not a piece of control chrome, so opt it
+   out of the global button:hover / :active backgrounds in variables.css. Those
+   selectors are (0,1,1) and would otherwise outrank the (0,1,0) class above;
+   pairing the class with the pseudo-class here takes it back to (0,2,0). */
+.image-modal-image-container-div:hover,
+.image-modal-image-container-div:active,
+.image-modal-image-container-div:focus {
+        background-color: var(--image-modal-image-container-div-bg);
+        color: inherit;
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
+/* Keyboard focus. Without these the modal is now tabbable but invisible to
+   anyone navigating by keyboard. :focus-visible keeps the ring off mouse clicks. */
+.image-modal-nav-button:focus-visible,
+.image-modal-image-container-div:focus-visible {
+        outline: 3px solid var(--focus-ring, #4d9fff);
+        outline-offset: 2px;
+        border-radius: 4px;
+}
+/* The image button fills the viewport, so inset the ring to keep it on screen. */
+.image-modal-image-container-div:focus-visible {
+        outline-offset: -5px;
 }
 
 /* X X X X X X X X X X X X X X X X X X X X X X X X X X X */

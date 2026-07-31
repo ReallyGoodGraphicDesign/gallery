@@ -205,7 +205,7 @@ main {
         flex: 1;
         max-width: 1000px;
         margin: 0 auto;
-        padding: 8px;
+        padding: 12px;
         box-sizing: border-box;
 }
 @media (min-width: 601px) and (max-width: 1024px) {
@@ -243,19 +243,63 @@ body.menu-open main {
         color: var(--no-results-text);
         font-weight: var(--weight-semi-bold);
 }
+/* Bar above the image grid when a category (or All) is open — the way back to
+   the chooser, now that the header dropdown is gone. */
+.category-bar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0 0 12px 0;
+}
+/* The element carries `button menu-toggle-button` in the markup and the same
+   bi-x-lg icon, so everything about the look — background, colour, hover,
+   active, border-radius, transition, and the 2rem/4px icon metrics — comes
+   from the same rules the header's close button uses. Nothing is duplicated
+   here, so the two can't drift apart.
+   The one thing dropped is the header button's `margin: 0 8px 0 0`, which
+   insets it from the viewport edge; here main already supplies that padding,
+   and the margin would push the button out of line with the grid below. */
+.menu-toggle-button.category-back-button {
+        margin-right: 0;
+}
+/* The menu button has no focus style of its own; this is a deliberate addition
+   so the control stays visible to keyboard users. Remove for a literal match. */
+.category-back-button:focus-visible {
+        outline: 3px solid var(--focus-ring);
+        outline-offset: 2px;
+}
+/* Matches .card-headline: same size, colour and weight, at full opacity. The
+   weight is explicit because this is a <p> — .card-headline is an <h3> and
+   picks up 600 from the global h3 rule in variables.css. */
+.category-current {
+        margin: 0;
+        padding-left: 12px;
+        font-size: 1rem;
+        font-weight: var(--weight-semi-bold);
+        color: var(--image-modal-and-card-text-txt);
+}
+/* Owns the space on both sides of the bullet. In em so it tracks the font size.
+   The literal spaces that used to sit either side are gone from the markup —
+   HTML collapses repeated spaces, so they weren't adjustable. */
+.category-current-sep {
+        margin: 0 .7em;
+}
+.no-results .category-back-button {
+        margin-bottom: 12px;
+}
 .card-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
         padding-bottom: 20px;
 }
 @media (min-width: 601px) and (max-width: 1024px) {
 .card-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
 }
 }
 @media (max-width: 600px) {
 .card-grid {
-        grid-template-columns: repeat(1, 1fr);
+        grid-template-columns: repeat(2, 1fr);
 }
 }

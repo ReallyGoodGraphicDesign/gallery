@@ -1,25 +1,74 @@
 .card { 
         background: var(--card-bg);
         display: flex;
-        gap: 8px;
+		flex-direction: column;
+        gap: 12px;
         margin: 0;
-        padding: 8px;
+        padding: 12px;
         border: 0;
         border-radius: 6px;
         overflow: hidden;
         box-sizing: border-box;
 }
+@media (max-width: 600px) {
+.card {
+        opacity: 1;
+		/*
+		flex-direction: row;
+		*/
+}
+}
+/* The 1:1 box must be driven by the card's WIDTH, never its height, or
+   aspect-ratio runs backwards. Two things guarantee that now the card is a
+   column flex container:
+     width: 100%  — a definite cross size, so aspect-ratio derives the height
+                    from it (the direction we want).
+     flex: 0 0 auto — the main axis is vertical here, so a growable/shrinkable
+                    box would take its height from the flex algorithm instead.
+                    The grid stretches every card to the tallest in its row, so
+                    that height is really "the tallest card in this row", which
+                    aspect-ratio would then feed back into the width — images
+                    spilling under the card's padding on short-headline cards,
+                    and shrinking on cards whose headline wraps.
+   NB if the commented-out `flex-direction: row` below is ever restored, this
+   needs `width: 50%` (or a flex-basis) to match the side-by-side layout. */
 .card-image-container {
         background: none;
         display: flex;
         align-items: center;
         justify-content: center;
-        flex: 1 1 50%;
+        flex: 0 0 auto;
+        width: 100%;
         padding: 0;
         box-sizing: border-box;
         border-radius: 4px;
         aspect-ratio: 1 / 1;   /* height tracks width */
         align-self: flex-start; /* WebKit: don't stretch to match text column, or aspect-ratio is ignored */
+        overflow: hidden;
+}
+@media (max-width: 600px) {
+.card-image-container {
+        opacity: 1;
+/*
+        flex: 1 1 50%;
+*/
+}
+}
+/* Wraps the image so it can be activated by keyboard. Stripped of the UA button
+   chrome (border/background/padding) because those would break the 1:1 box the
+   container relies on. */
+.card-image-button {
+        background: none;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        appearance: none;
+        -webkit-appearance: none;
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
+        cursor: pointer;
         overflow: hidden;
 }
 .card-image-container img {
@@ -35,27 +84,53 @@
         object-fit: cover;
         display: block;
         margin: 0 auto;
-        border-radius: 4px;    
-        cursor: pointer;
+        border-radius: 4px;
         padding: 0;
         filter: saturate(0%);
         transition: filter 0.4s ease;
 }
-.card-image-container img:hover {
+/* Same opt-out as the modal's image button: the global button:hover/:active in
+   variables.css is (0,1,1) and would otherwise beat the (0,1,0) class above.
+   Normally hidden behind the image, but it flashes while a lazy image loads. */
+.card-image-button:hover,
+.card-image-button:active,
+.card-image-button:focus {
+        background: none;
+        color: inherit;
+}
+.card-image-button:hover img {
         filter: saturate(110%);
 }
+/* Keyboard focus ring — the app defined none for cards before this. */
+.card-image-button:focus-visible {
+        outline: 3px solid var(--focus-ring, #4d9fff);
+        outline-offset: 2px;
+}
+/* Also out of the flex distribution: `flex: 1 1 15%` was 15% of the card's
+   HEIGHT once the direction became column, which fought the image box for the
+   row's spare height. Sized by its own text instead; slack from a stretched
+   card collects at the bottom, below the text. */
 .card-text-container {
         background-color: var(--card-text-bg);
         color: var(--image-modal-and-card-text-txt);
-        flex: 1 1 50%;
+        flex: 0 0 auto;
         padding: 0 0 0 4px;
         box-sizing: border-box;
+}
+@media (max-width: 600px) {
+.card-text-container {
+        opacity: 1;
+/*
+        flex: 1 1 50%;
+*/
+}
 }
 .card-headline {
         font-size: 1rem;
         margin-top: 0;    
         margin-bottom: 0;
         line-height: 1.25rem;    
+		text-transform: uppercase;
 }
 .card-date-location {
         display: none;

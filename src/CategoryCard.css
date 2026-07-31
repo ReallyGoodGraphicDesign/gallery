@@ -1,0 +1,37 @@
+/* The tile is a <button> so the whole card is keyboard-operable, but .card is
+   written for a <div>. Strip the UA button chrome and re-assert the layout. */
+.category-card {
+        appearance: none;
+        -webkit-appearance: none;
+        font: inherit;
+        color: inherit;
+        text-align: left;
+        width: 100%;
+        cursor: pointer;
+}
+
+/* Opt out of the global button:hover / :active in variables.css. Those are
+   (0,1,1) and would otherwise repaint the tile on hover; pairing .card with
+   .category-card and the pseudo-class gets us to (0,2,1) and keeps it stable. */
+.card.category-card:hover,
+.card.category-card:active,
+.card.category-card:focus {
+        background: var(--card-bg);
+        color: inherit;
+}
+
+.category-card:focus-visible {
+        outline: 3px solid var(--focus-ring, #4d9fff);
+        outline-offset: 2px;
+}
+
+/* Match the image grid's desaturate-until-hover treatment. Card.css hangs its
+   hover off .card-image-button, which this tile doesn't use. */
+.category-card:hover .card-image-container img,
+.category-card:focus-visible .card-image-container img {
+        filter: saturate(110%);
+}
+
+.category-card-count {
+        opacity: .7;
+}

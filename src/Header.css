@@ -42,7 +42,7 @@ body.menu-open .header {
         box-sizing: border-box;
         font-size: 1.25rem;
         gap: 3rem;
-        margin: 0 0 0 8px;
+        margin: 0 0 0 12px;
         vertical-align: middle;
         padding: none;
 }
@@ -83,7 +83,7 @@ body.menu-open .header {
         align-items: center;
         box-sizing: border-box;
         padding: none;
-        margin: 8px;
+        margin: 12px;
         gap: 15rem;
         width: 0px;  
 }
@@ -102,7 +102,7 @@ body.menu-open .header {
 .menu-toggle-button {
         border: none;
         padding: 0;
-        margin: 0 8px 0 0;
+        margin: 0 12px 0 0;
         cursor: pointer;
         display: inline-flex;
         align-items: center;
@@ -122,22 +122,22 @@ body.menu-open .header {
         max-width: 1000px;       
         width: 100%;
         display: flex;
-        gap: 8px;
+        gap: 12px;
         margin: 0 auto;         
         border-radius: 0;
         background: var(--menu-inner-bg);
         color: var(--menu-modal-and-card-text);
-        padding: 8px;
+        padding: 12px;
         box-sizing: border-box;
         animation: menuSlide 180ms ease-out;
 }
 @keyframes menuSlide {
-  from { transform: translateY(-8px); opacity: 0; }
+  from { transform: translateY(-12px); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
 }
 /* Each of the three menu-inner children takes exactly one-third, so their
    edges line up with the 3-column .card-grid below (same max-width, padding,
-   and 8px gap). min-width:0 lets the search input/select shrink to fit. */
+   and 12px gap). min-width:0 lets the search input/select shrink to fit. */
 .menu-inner > .menu-modal-category-wrapper,
 .menu-inner > .menu-modal-input-reset,
 .menu-inner > .email-button-wrapper {
@@ -146,7 +146,7 @@ body.menu-open .header {
 }
 /* Tablet (grid is 2 wide): dropdown + search share one 50/50 row, email
    drops to its own full-width row below. calc(50% - 4px) accounts for the
-   8px gap so two items fit exactly on the first row. */
+   12px gap so two items fit exactly on the first row. */
 @media (min-width: 601px) and (max-width: 1024px) {
 .menu-inner {
         flex-wrap: wrap;
@@ -174,13 +174,16 @@ body.menu-open .header {
         background: var(--menu-modal-search-wrapper-bg);
         position: relative;
 }
+/* Only `background` and `box-sizing` from this rule actually apply. The
+   `.menu-inner .menu-modal-input-reset` rule further down is more specific and
+   overrides display/gap/alignment — the gap that used to sit here never had any
+   effect, so it's gone rather than left to mislead. */
 .menu-modal-input-reset {
         background: var(--menu-modal-input-reset-bg);
         display: flex;
         justify-content: flex-end;
         align-items: center;
         box-sizing: border-box;
-        gap: .5rem;
 }
 .menu-modal-search-input {
         background: var(--menu-modal-search-input-bg);
@@ -192,7 +195,7 @@ body.menu-open .header {
         border-radius: 4px;
         margin: 0;
         padding: 0;
-        text-indent: 8px;
+        text-indent: 12px;
         box-sizing: border-box;
         font-size: 16px; /* iOS zooms on focus when input font-size < 16px */
 }
@@ -211,7 +214,7 @@ body.menu-open .header {
         margin: 0;
         padding: 0;
         padding-right: 32px; /* room for the custom caret */
-        text-indent: 8px;
+        text-indent: 12px;
         box-sizing: border-box;
         font-size: 16px; /* iOS zooms on focus when input font-size < 16px */
         cursor: pointer;
@@ -258,10 +261,13 @@ body.menu-open .header {
         padding: 16px 0 4px 0;
 }
 
+/* This is the rule that governs the search input / Clear button row — it is
+   (0,2,0) and later in the file, so it beats the plain .menu-modal-input-reset
+   rule above on both counts. Change the gap HERE. */
 .menu-inner .menu-modal-input-reset {
         display: grid;
         grid-template-columns: 1fr auto;
-        gap: 8px;
+        gap: 12px;
         align-items: center;
 }
 .menu-inner .menu-modal-search-wrapper {

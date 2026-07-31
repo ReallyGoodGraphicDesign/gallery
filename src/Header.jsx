@@ -2,13 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import "./Header.css";
 import logo from "./assets/logo.png"; 
 
-const Header = ({
-  searchTerm,
-  setSearchTerm,
-  categoryOptions = [],
-  selectedCategory = "",
-  setSelectedCategory = () => {},
-}) => {
+// The category <select> that used to live in this menu was replaced by the
+// card grid in App's main area; search is all that remains here.
+const Header = ({ searchTerm, setSearchTerm }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const inputRef = useRef(null);
 
@@ -58,20 +54,6 @@ return (
         <div className="menu-outer" 
         role="region" aria-label="Search and contact">
                 <div className="menu-inner" >
-                        {categoryOptions.length > 0 && (
-                        <div className="menu-modal-category-wrapper">
-                                <select className="menu-modal-category-select"
-                                aria-label="Filter by category"
-                                value={selectedCategory}
-                                onChange={(e) => setSelectedCategory(e.target.value)}>
-                                        <option value="">All</option>
-                                        {categoryOptions.map((c) => (
-                                        <option key={c} value={c}>{c}</option>
-                                        ))}
-                                </select>
-                                <i className="category-caret bi bi-chevron-down" aria-hidden="true"></i>  
-                        </div>
-                        )}
                         <div className="menu-modal-input-reset">
                                 <div className="menu-modal-search-wrapper">
                                         <span>
