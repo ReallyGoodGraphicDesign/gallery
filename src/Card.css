@@ -13,6 +13,11 @@
 @media (max-width: 600px) {
 .card {
         opacity: 1;
+        /* Tighter than the 12px the wider breakpoints use — two columns on a
+           phone can't spare it. Matches the grid gap and main's padding, which
+           step down to 8px here too. */
+        gap: 8px;
+        padding: 8px;
 		/*
 		flex-direction: row;
 		*/

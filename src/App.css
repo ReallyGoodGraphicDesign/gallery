@@ -216,6 +216,7 @@ main {
 @media (max-width: 600px) {
 main {
         opacity: 1;
+        padding: 8px;
 }
 }
 body.menu-open main {
@@ -251,6 +252,12 @@ body.menu-open main {
         justify-content: flex-start;
         padding: 0 0 12px 0;
 }
+@media (max-width: 600px) {
+.category-bar {
+        opacity: 1;
+        padding: 0 0 8px 0;
+}
+}
 /* The element carries `button menu-toggle-button` in the markup and the same
    bi-x-lg icon, so everything about the look — background, colour, hover,
    active, border-radius, transition, and the 2rem/4px icon metrics — comes
@@ -278,6 +285,12 @@ body.menu-open main {
         font-weight: var(--weight-semi-bold);
         color: var(--image-modal-and-card-text-txt);
 }
+@media (max-width: 600px) {
+.category-current {
+        opacity: 1;
+        padding-left: 8px;
+}
+}
 /* Owns the space on both sides of the bullet. In em so it tracks the font size.
    The literal spaces that used to sit either side are gone from the markup —
    HTML collapses repeated spaces, so they weren't adjustable. */
@@ -286,6 +299,12 @@ body.menu-open main {
 }
 .no-results .category-back-button {
         margin-bottom: 12px;
+}
+@media (max-width: 600px) {
+.no-results .category-back-button {
+        opacity: 1;
+        margin-bottom: 8px;
+}
 }
 .card-grid {
         display: grid;
@@ -301,5 +320,6 @@ body.menu-open main {
 @media (max-width: 600px) {
 .card-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
 }
 }
