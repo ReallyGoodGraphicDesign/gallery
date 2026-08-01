@@ -208,6 +208,15 @@ main {
         padding: 12px;
         box-sizing: border-box;
 }
+/* The category bar sits at the top of main and already carries 8px of padding
+   below itself, so the full 12px above it reads as too much space. Trimming
+   main's top padding to 8px only when the bar is present keeps the gap even
+   without touching the chooser view, which has no bar and keeps its 12px.
+   `body.menu-open main` below is (0,1,2) against this rule's (0,1,1), so the
+   open menu still takes its own top padding from there, not from here. */
+main:has(> .category-bar) {
+        padding: 8px 12px 12px 12px;
+}
 @media (min-width: 601px) and (max-width: 1024px) {
 main {
         opacity: 1;
@@ -218,8 +227,21 @@ main {
         opacity: 1;
         padding: 8px;
 }
+/* :has() outranks the plain `main` above, so the mobile 8px has to be restated
+   here or the bar view would pick up the desktop 12px sides. */
+main:has(> .category-bar) {
+        padding: 8px;
+}
 }
 body.menu-open main {
+        padding-top: 0;
+}
+/* With the menu open there is no header edge above main to sit flush against —
+   the menu panel's own 12px of bottom padding ends the block — so collapsing to
+   0 would butt the back button up under the search field. The bar view takes
+   12px back; the chooser view keeps padding-top: 0 from the rule above.
+   (0,2,2) beats that rule's (0,1,2), so order here doesn't matter. */
+body.menu-open main:has(> .category-bar) {
         padding-top: 0;
 }
 @media (min-width: 601px) and (max-width: 1024px) {
@@ -250,7 +272,7 @@ body.menu-open main {
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        padding: 0 0 12px 0;
+        padding: 0 0 8px 0;
 }
 @media (max-width: 600px) {
 .category-bar {
