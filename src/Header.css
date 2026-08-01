@@ -131,6 +131,13 @@ body.menu-open .header {
         box-sizing: border-box;
         animation: menuSlide 180ms ease-out;
 }
+@media (max-width: 600px) {
+.menu-inner {
+        opacity: 1;
+        padding: 8px;
+        gap: 8px;
+}
+}
 @keyframes menuSlide {
   from { transform: translateY(-12px); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
@@ -269,12 +276,6 @@ body.menu-open .header {
         grid-template-columns: 1fr auto;
         gap: 12px;
         align-items: center;
-}
-@media (max-width: 600px) {
-.menu-inner .menu-modal-input-reset {
-        opacity: 1;
-        gap: 8px;
-}
 }
 .menu-inner .menu-modal-search-wrapper {
         position: relative;
