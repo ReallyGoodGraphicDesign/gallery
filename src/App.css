@@ -282,6 +282,11 @@ body.menu-open .category-bar {
         padding: 0 0 12px 0;
 }
 @media (max-width: 600px) {
+body.menu-open .category-bar {
+        padding: 0 0 8px 0;
+}
+}
+@media (max-width: 600px) {
 .category-bar {
         opacity: 1;
         padding: 0 0 8px 0;
