@@ -138,14 +138,13 @@ button:active, .button:active {
         --header-right-bg: grey;
         --header-footer-text: white;
         --email-button-wrapper-bg: coral;
-        --main-bg: rgb(94, 114, 181);
+        --main-bg: rgb(29, 30, 31);
         --no-results-bg: lightblue;
         --no-results-text: rgb(210, 210, 210);
 
-        --resume-text-outer-bg: hotpink;
-        --resume-text-inner-bg: rgb(163, 47, 105);
+        --category-bar-bg: green;
 
-        --card-bg: 
+		--card-bg: 
                 linear-gradient(
                 rgba(var(--custom_color-1-rgb),.1),
                 rgba(var(--custom_color-1-rgb),.1)), 

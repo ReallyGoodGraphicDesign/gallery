@@ -236,7 +236,10 @@ main:has(> .category-bar) {
 body.menu-open main {
         padding-top: 0;
 }
-/* With the menu open there is no header edge above main to sit flush against —
+/* THE ABOVE MEANS 'MENU OPEN BUT CATEGORY BAR NOT OPEN'
+
+
+With the menu open there is no header edge above main to sit flush against —
    the menu panel's own 12px of bottom padding ends the block — so collapsing to
    0 would butt the back button up under the search field. The bar view takes
    12px back; the chooser view keeps padding-top: 0 from the rule above.
@@ -269,10 +272,14 @@ body.menu-open main {
 /* Bar above the image grid when a category (or All) is open — the way back to
    the chooser, now that the header dropdown is gone. */
 .category-bar {
+        background-color: var(--category-bar-bg);
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        padding: 0 0 8px 0;
+        padding: 4px 0 12px 0;
+}
+body.menu-open .category-bar {
+        padding: 0 0 12px 0;
 }
 @media (max-width: 600px) {
 .category-bar {
@@ -306,6 +313,7 @@ body.menu-open main {
         font-size: 1rem;
         font-weight: var(--weight-semi-bold);
         color: var(--image-modal-and-card-text-txt);
+		text-transform: uppercase;
 }
 @media (max-width: 600px) {
 .category-current {
