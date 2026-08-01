@@ -183,6 +183,13 @@ function App() {
   const openCategory = (name) => {
     setSelectedCategory(name);
     setView("images");
+    // Opening a category is a new screen, not a continuation of the chooser, so
+    // it starts at the top rather than wherever the tile happened to be. The
+    // scroll is instant on purpose: the grid underneath is being replaced at the
+    // same moment, so animating past content that's about to vanish just reads
+    // as a glitch. Safe to call before the re-render — 0 is a valid offset at
+    // any document height, so nothing clamps it back.
+    window.scrollTo({ top: 0, behavior: "instant" });
   };
 
   const backToCategories = () => {
