@@ -270,6 +270,12 @@ body.menu-open .header {
         gap: 12px;
         align-items: center;
 }
+@media (max-width: 600px) {
+.menu-inner .menu-modal-input-reset {
+        opacity: 1;
+        gap: 8px;
+}
+}
 .menu-inner .menu-modal-search-wrapper {
         position: relative;
 }
