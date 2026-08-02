@@ -15,12 +15,35 @@
 // roughly one origin request every SHEET_CACHE_TTL seconds instead of one per
 // image. Apps Script 302-redirects to script.googleusercontent.com; fetch
 // follows redirects by default.
-const SHEET_CACHE_TTL = 300; // seconds
+//
+// The amplification this defends against happens inside a single page load — a
+// burst lasting seconds — so the TTL only has to outlast that burst, not run
+// for minutes. 30s collapses a page load to the same ~1 origin request 300s
+// did, while cutting how long a sheet edit stays invisible by 10x. The cost is
+// only an extra origin hit when a load lands more than 30s after the last one.
+//
+// Note this is a server-to-server fetch, so nothing the browser does — hard
+// refresh, cleared site data, incognito — reaches this cache. Editing the sheet
+// and wanting to see it now is what the `fresh` option below is for.
+const SHEET_CACHE_TTL = 30; // seconds
 
-export async function fetchSheet(env) {
-  const res = await fetch(env.SHEET_URL, {
+export async function fetchSheet(env, { fresh = false } = {}) {
+  // Busting means a different cache KEY: an entry already stored under the
+  // plain URL can't be read past any other way. The consequence is that the
+  // fresh response lands under a throwaway key and does NOT refresh the
+  // canonical entry the image route reads — that one still lapses on its own
+  // TTL. Harmless for edits to ordering or text, which touch no image keys; a
+  // brand-new image can still 404 for up to SHEET_CACHE_TTL, which is the other
+  // reason to keep that number small.
+  const url = fresh
+    ? `${env.SHEET_URL}${env.SHEET_URL.includes("?") ? "&" : "?"}_fresh=${Date.now()}`
+    : env.SHEET_URL;
+
+  const res = await fetch(url, {
     headers: { Accept: "application/json" },
-    cf: { cacheTtl: SHEET_CACHE_TTL, cacheEverything: true },
+    cf: fresh
+      ? { cacheTtl: 0, cacheEverything: false }
+      : { cacheTtl: SHEET_CACHE_TTL, cacheEverything: true },
   });
   if (!res.ok) throw new Error(`sheet upstream ${res.status}`);
   return res.json();

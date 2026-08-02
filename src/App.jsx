@@ -73,7 +73,19 @@ function App() {
   useEffect(() => {
     if (!authed) return;
     setLoading(true);
-    fetch("/api/data", { credentials: "same-origin" })
+    // Forwarding ?fresh=1 from the page URL makes one load bypass the sheet
+    // cache, so an edit shows up now instead of waiting out SHEET_CACHE_TTL.
+    // That cache lives between the Worker and Apps Script (see _sheet.js), so
+    // no amount of hard-refreshing gets past it from the browser side — this
+    // param is the only way to ask for a fresh read. Images still resolve
+    // against the cached sheet, so a brand-new one can 404 briefly.
+    const fresh = new URLSearchParams(window.location.search).has("fresh");
+    fetch(fresh ? "/api/data?fresh=1" : "/api/data", {
+      credentials: "same-origin",
+      // The fresh response already carries no-store; asking here too means the
+      // browser can't answer this one from its own cache either.
+      cache: fresh ? "no-store" : "default",
+    })
       .then((res) => res.json())
       .then((data) => {
         // Turn a Google Sheet image path into an authenticated API URL.
@@ -111,11 +123,8 @@ function App() {
       ? v.split(",").map((s) => s.trim()).filter(Boolean)
       : [];
 
-  // Dropdown options: the distinct category names across the loaded cards,
-  // deduped case-insensitively (first-seen casing wins) and sorted A–Z. Because
-  // the client only holds rows this passcode can access, the list auto-scopes.
-  // Any non-empty `cover` cell marks that row as its category's cover image.
-  // Kept loose on purpose so the sheet can use x / TRUE / 1 interchangeably.
+  // Does one `cover` value mark its row as a cover image? Kept loose on purpose
+  // so the sheet can use x / TRUE / 1 interchangeably.
   const isCoverFlag = (v) => {
     if (v === true) return true;
     if (typeof v === "number") return v !== 0;
@@ -123,6 +132,26 @@ function App() {
     const s = v.trim().toLowerCase();
     return s !== "" && s !== "false" && s !== "0" && s !== "no";
   };
+
+  // `cover` splits like `cat_order` does, so slot i marks the row as cover for
+  // category i: "Graphic Design, Digest" against ", x" makes the row Digest's
+  // cover while leaving Graphic Design's alone. A best-of category shares
+  // nearly all its rows with the categories it draws from, so a single
+  // row-level flag could never have separated the two.
+  //
+  // Only a comma turns the cell into a list. Anything else — "x", TRUE, 1, a
+  // checkbox — stays one value that broadcasts to every category on the row,
+  // which is what every existing flag in the sheet relies on.
+  const splitCoverFlags = (v) =>
+    typeof v === "string" && v.includes(",")
+      ? v.split(",").map(isCoverFlag)
+      : [isCoverFlag(v)];
+
+  // Whether the row claims cover for its i-th category. Mirrors catOrderAt: one
+  // value broadcasts, past that it's positional, and a list that ran short
+  // simply doesn't claim the categories it didn't reach.
+  const coverAt = (flags, i) =>
+    flags.length === 1 ? flags[0] : i < flags.length ? flags[i] : false;
 
   // Parse a `cat_order` cell into a sort number, or null when there isn't one.
   // Note Number("") is 0, which would sort an empty cell to the FRONT — hence
@@ -161,29 +190,34 @@ function App() {
   // cards, deduped case-insensitively (first-seen casing wins) and sorted A–Z.
   // Because cardData is already access-scoped, the chooser auto-scopes too.
   const categoryCards = useMemo(() => {
-    const groups = new Map(); // lowercased name -> { name, cards, orders }
+    const groups = new Map(); // lowercased name -> { name, cards, covers, orders }
     for (const card of cardData) {
-      // Read the row's numbers once, then hand each category the slot that
-      // belongs to it. The claim has to be resolved HERE, while we still know
-      // which slot this card occupied — by the time the groups are mapped
+      // Read the row's lists once, then hand each category the slot that
+      // belongs to it. Both claims have to be resolved HERE, while we still
+      // know which slot this card occupied — by the time the groups are mapped
       // below, that position is gone.
       const claimed = splitCatOrders(card.cat_order);
+      const flagged = splitCoverFlags(card.cover);
       splitCategories(card.category).forEach((name, i) => {
         const key = name.toLowerCase();
-        if (!groups.has(key)) groups.set(key, { name, cards: [], orders: [] });
+        if (!groups.has(key)) {
+          groups.set(key, { name, cards: [], covers: [], orders: [] });
+        }
         const group = groups.get(key);
         group.cards.push(card);
+        if (coverAt(flagged, i)) group.covers.push(card);
         const n = catOrderAt(claimed, i);
         if (n !== null) group.orders.push(n);
       });
     }
     return [...groups.values()]
-      .map(({ name, cards, orders }) => {
-        // Prefer a flagged cover, but only among rows THIS passcode can see —
-        // a cover flagged on a row they lack access to would 404 through the
+      .map(({ name, cards, covers, orders }) => {
+        // Prefer a row that claimed cover FOR THIS category, earliest in sheet
+        // order if several did, and only among rows THIS passcode can see — a
+        // cover flagged on a row they lack access to would 404 through the
         // image route. Falling back to the first visible image means every
         // tile always renders something real.
-        const cover = cards.find((c) => isCoverFlag(c.cover)) || cards[0];
+        const cover = covers[0] || cards[0];
 
         // Sheet-driven tile order, from the numbers the rows claimed for THIS
         // category specifically. Still the MINIMUM, and still only across the

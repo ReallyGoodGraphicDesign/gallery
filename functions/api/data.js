@@ -16,9 +16,16 @@ export async function onRequestGet({ request, env }) {
     return new Response("Server not configured", { status: 500 });
   }
 
+  // Editing escape hatch: /api/data?fresh=1 skips the edge cache so a sheet
+  // change shows up now instead of waiting out SHEET_CACHE_TTL. It sits below
+  // the session check, so it is not an open pipe to Apps Script — only someone
+  // who already has a passcode can reach it, and they could force the same
+  // origin traffic just by reloading past each TTL anyway.
+  const fresh = new URL(request.url).searchParams.has("fresh");
+
   let rows;
   try {
-    rows = await fetchSheet(env);
+    rows = await fetchSheet(env, { fresh });
   } catch {
     return new Response("Upstream error", { status: 502 });
   }
@@ -33,7 +40,9 @@ export async function onRequestGet({ request, env }) {
     status: 200,
     headers: {
       "Content-Type": "application/json",
-      "Cache-Control": "private, max-age=60",
+      // A deliberately fresh read that the browser then held for a minute would
+      // defeat itself on the very next reload.
+      "Cache-Control": fresh ? "no-store" : "private, max-age=60",
     },
   });
 }
