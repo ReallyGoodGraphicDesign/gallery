@@ -135,34 +135,63 @@ function App() {
     return Number.isFinite(n) ? n : null;
   };
 
+  // Split a `cat_order` cell the same way `category` is split, so slot i of one
+  // lines up with slot i of the other: "Graphic Design, Greatest Hits" against
+  // "20, 1" ranks the row 20th among Graphic Design's rows and 1st among
+  // Greatest Hits'. That's the whole point of the list form — one number per row
+  // can only be broadcast to every category on it, so a number low enough to
+  // lift one category always dragged its co-categories along.
+  //
+  // Empty and unparseable slots become null rather than collapsing away, so
+  // ", 1" keeps the 1 in slot 2 instead of sliding it into slot 1.
+  const splitCatOrders = (v) =>
+    v == null || String(v).trim() === ""
+      ? []
+      : String(v).split(",").map(toCatOrder);
+
+  // The order a row claims in its i-th category. A single bare number still
+  // applies to every category on the row — that's the pre-list behaviour, so a
+  // sheet that never adopts the list form keeps sorting exactly as it did.
+  // Past that it's strictly positional, and a row whose list ran short is
+  // simply unnumbered in the categories it didn't reach.
+  const catOrderAt = (orders, i) =>
+    orders.length === 1 ? orders[0] : i < orders.length ? orders[i] : null;
+
   // The category chooser's tiles: one per distinct category among the loaded
   // cards, deduped case-insensitively (first-seen casing wins) and sorted A–Z.
   // Because cardData is already access-scoped, the chooser auto-scopes too.
   const categoryCards = useMemo(() => {
-    const groups = new Map(); // lowercased name -> { name, cards }
+    const groups = new Map(); // lowercased name -> { name, cards, orders }
     for (const card of cardData) {
-      for (const name of splitCategories(card.category)) {
+      // Read the row's numbers once, then hand each category the slot that
+      // belongs to it. The claim has to be resolved HERE, while we still know
+      // which slot this card occupied — by the time the groups are mapped
+      // below, that position is gone.
+      const claimed = splitCatOrders(card.cat_order);
+      splitCategories(card.category).forEach((name, i) => {
         const key = name.toLowerCase();
-        if (!groups.has(key)) groups.set(key, { name, cards: [] });
-        groups.get(key).cards.push(card);
-      }
+        if (!groups.has(key)) groups.set(key, { name, cards: [], orders: [] });
+        const group = groups.get(key);
+        group.cards.push(card);
+        const n = catOrderAt(claimed, i);
+        if (n !== null) group.orders.push(n);
+      });
     }
     return [...groups.values()]
-      .map(({ name, cards }) => {
+      .map(({ name, cards, orders }) => {
         // Prefer a flagged cover, but only among rows THIS passcode can see —
         // a cover flagged on a row they lack access to would 404 through the
         // image route. Falling back to the first visible image means every
         // tile always renders something real.
         const cover = cards.find((c) => isCoverFlag(c.cover)) || cards[0];
 
-        // Sheet-driven tile order. Taking the MINIMUM across the rows this
-        // passcode can see means a single numbered row is enough, but filling
-        // the number down a category's whole block keeps its position even for
-        // a passcode that can't see the numbered row (as with California's
-        // admin-only cover). No number anywhere -> Infinity, i.e. sorts last.
-        const orders = cards
-          .map((c) => toCatOrder(c.cat_order))
-          .filter((n) => n !== null);
+        // Sheet-driven tile order, from the numbers the rows claimed for THIS
+        // category specifically. Still the MINIMUM, and still only across the
+        // rows this passcode can see: a single numbered row is enough, but
+        // filling the number down a category's whole block keeps its position
+        // even for a passcode that can't see the numbered row (as with
+        // California's admin-only cover). Nothing numbered anywhere ->
+        // Infinity, i.e. sorts last.
         const order = orders.length ? Math.min(...orders) : Number.POSITIVE_INFINITY;
 
         return { name, count: cards.length, imageTiny: cover?.imageTiny, order };
