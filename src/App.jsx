@@ -161,7 +161,7 @@ function App() {
     const s = String(v).trim();
     if (s === "") return null;
     const n = Number(s);
-    return Number.isFinite(n) ? n : null;
+    return Number.isFinite(n) ? n : null; 
   };
 
   // Split a `cat_order` cell the same way `category` is split, so slot i of one
