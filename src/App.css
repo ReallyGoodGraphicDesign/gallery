@@ -73,6 +73,7 @@ html, body, #root {
         background-size: 100%;
         flex: none;
         display: block;
+		opacity: 0;
 }
 @media (min-width: 601px) and (max-width: 1024px) {
 .logo-carousel-image {
