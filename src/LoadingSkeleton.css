@@ -1,70 +1,110 @@
-/* Loading skeleton and shimmer */
+/* Loading skeleton and shimmer.
+
+   The two colours are variables so a theme can override them in one place,
+   with the dark defaults inline the way CategoryCard.css does with
+   --focus-ring. They have to be theme-relative rather than fixed greys: the
+   app is dark (--card-bg is hsl(0 0% 14%) under a colour wash), so light-grey
+   blocks would flash a near-white viewport and then invert the moment the
+   real cards arrive. Because the blocks sit ON a real .card, they only need to
+   be a little lighter than it is, and the sweep a little lighter again — at
+   these levels the highlight reads as a sheen rather than a searchlight. */
 .loading-skeleton {
-  padding: 24px;
-  box-sizing: border-box;
+  --skeleton-block: rgba(255, 255, 255, .05);
+  --skeleton-sheen: rgba(255, 255, 255, .06);
+
+  /* No padding of its own: main already supplies the page inset, and a second
+     helping here would hold the skeleton further in than the grid it stands
+     in for. */
+
+  /* Held back briefly so a warm cache — where /api/data can answer inside a
+     frame or two — never paints a skeleton just to erase it. */
+  opacity: 0;
+  animation: skeleton-appear .2s ease 150ms forwards;
 }
-.skeleton-hero {
-  max-width: 980px;
-  margin: 0 auto 18px auto;
-  display: grid;
-  gap: 12px;
-}
-.skeleton-title {
-  height: 28px;
-  width: 50%;
-  border-radius: 6px;
-  background: #e6e6e6;
-}
-.skeleton-text {
-  height: 14px;
-  width: 80%;
-  border-radius: 6px;
-  background: #eee;
-}
-.skeleton-cta {
-  height: 36px;
-  width: 140px;
-  border-radius: 6px;
-  background: #e0e0e0;
-}
-.skeleton-grid {
-  display: grid;
-  gap: 8px;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-}
-.skeleton-image {
-  height: 140px;
-  border-radius: 8px;
-  background: #ddd;
+@keyframes skeleton-appear {
+  to { opacity: 1; }
 }
 
-/* shimmer animation */
-.shimmer {
+/* Visually hidden, still announced. */
+.skeleton-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Nothing in here is real, so nothing in here should be clickable. */
+.skeleton-card {
+  pointer-events: none;
+}
+
+/* The doubled selector is deliberate. Card.css sets `background: none` on
+   .card-image-container at (0,1,0) and loads before this file, so a lone
+   .skeleton-block would tie on specificity and lose on order. Pairing the two
+   classes reaches (0,2,0) and holds the fill whatever the import order ends
+   up being. Each selector in the group is scored on its own, so the plain
+   .skeleton-block below still applies to the text lines. */
+.skeleton-block,
+.card-image-container.skeleton-block {
+  background: var(--skeleton-block);
+  border-radius: 4px;
   position: relative;
   overflow: hidden;
 }
-.shimmer::after {
+
+/* Sized to the type they replace: .card-headline's 1.25rem line box and
+   .card-date's ~.96rem one, carrying the same margins, so the text block is
+   the same height before and after the swap. */
+.skeleton-line {
+  border-radius: 4px;
+}
+.skeleton-headline {
+  height: 1.25rem;
+  width: 65%;
+  margin-top: -3px;
+}
+.skeleton-meta {
+  height: .96rem;
+  width: 40%;
+  margin-top: 2px;
+}
+
+/* shimmer animation — transform rather than background-position, because the
+   former is composited and the latter would repaint all 36 blocks each frame.
+   The gradient is exactly the width of its block, so the offsets mean what
+   they look like they mean: -100% is just off the left edge, 100% just off
+   the right. */
+.skeleton-block::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: -150%;
-  height: 100%;
-  width: 150%;
+  inset: 0;
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.4) 50%,
-    rgba(255, 255, 255, 0) 100%
+    transparent 0%,
+    var(--skeleton-sheen) 50%,
+    transparent 100%
   );
-  animation: shimmer 1.2s linear infinite;
+  transform: translateX(-100%);
+  animation: skeleton-sweep 1.8s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 80ms);
 }
-@keyframes shimmer {
-  to {
-    transform: translateX(150%);
-  }
+/* The sweep finishes at 60% and the remainder of the cycle is a pause. Running
+   it corner to corner with no rest is most of what makes these read as
+   mechanical. */
+@keyframes skeleton-sweep {
+  0%   { transform: translateX(-100%); }
+  60%  { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
 }
+/* Parked at -100% the gradient sits entirely outside the block, so dropping
+   the animation leaves flat tiles rather than a frozen half-lit gradient. */
 @media (prefers-reduced-motion: reduce) {
-  .shimmer::after {
+  .skeleton-block::after {
     animation: none;
   }
 }

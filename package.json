@@ -18,6 +18,7 @@
     "adobe-swatch-exchange": "^0.0.0",
     "ase-util": "^1.0.3",
     "vite": "^5.4.0",
+    "vitest": "^4.1.10",
     "wrangler": "^4.98.0"
   },
   "scripts": {
@@ -26,6 +27,8 @@
     "predev:full": "lsof -nP -tiTCP:5173 -sTCP:LISTEN | xargs kill -9; lsof -nP -tiTCP:8788 -sTCP:LISTEN | xargs kill -9; exit 0",
     "dev:full": "wrangler pages dev --proxy 5173 -- npm run dev -- --port 5173 --strictPort",
     "build": "vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "preview": "vite preview",
     "generate-colors": "node scripts/generate-colors.js"
   },

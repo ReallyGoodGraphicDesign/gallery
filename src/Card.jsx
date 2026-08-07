@@ -1,6 +1,10 @@
 import "./Card.css";
+// `eager` opts a card out of lazy loading. The image grid can run to hundreds
+// of rows, so lazy is right for the bulk of it — but it's wrong for the cards
+// already on screen at first paint, which have to wait for layout before the
+// browser will start their fetch. App.jsx sets it for the opening screenful.
 const Card = ({
-        imageTiny, headline, dateLocation, date, location, description, filename, keywords, onImageClick }) => {
+        imageTiny, headline, dateLocation, date, location, description, filename, keywords, onImageClick, eager = false }) => {
 return (
         <div className="card">
                 <div className="card-image-container">
@@ -12,7 +16,9 @@ return (
                         <button type="button" className="card-image-button"
                         aria-label={headline ? undefined : "Open image"}
                         onClick={onImageClick}>
-                                <img  loading="lazy" src={imageTiny} alt={headline || ""} onError={(e) => {
+                                <img  loading={eager ? "eager" : "lazy"}
+                                fetchpriority={eager ? "high" : undefined}
+                                src={imageTiny} alt={headline || ""} onError={(e) => {
                                 e.target.onerror = null; // prevent infinite loop
                                 e.target.src = "/images/Image Not Available.png";
                                 }} />

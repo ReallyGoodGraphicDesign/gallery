@@ -73,7 +73,7 @@ html, body, #root {
         background-size: 100%;
         flex: none;
         display: block;
-		opacity: 0;
+		opacity: 01;
 }
 @media (min-width: 601px) and (max-width: 1024px) {
 .logo-carousel-image {
@@ -201,9 +201,24 @@ html, body, #root {
 .menu-modal-input-reset:has(.funtime-button.hidden) {
   grid-template-columns: 1fr; 
 }
+/* `margin: 0 auto` centres main, but it also cancels the cross-axis stretch it
+   would otherwise get as a flex item of .App — an item with auto margins on
+   the cross axis is sized to fit its content instead. That left main's width
+   derived from its content's intrinsic width, which for a grid of cards means
+   the natural pixel width of the <img> inside them. An image that hasn't
+   arrived yet has no natural width, so until the thumbnails loaded main
+   collapsed to the width of the card TEXT — 393px instead of 1000px at a
+   1200px viewport, with 83px cards — and snapped into place only once they
+   did. Worst on a passcode whose chooser holds a single tile: nothing else
+   contributes width, and nothing masks the reflow.
+
+   width: 100% restores a definite cross size, so main measures 1000px (or the
+   viewport, whichever is smaller) from the first paint and the grid is correct
+   before any image has been fetched. */
 main {
         background: var(--main-bg);
         flex: 1;
+        width: 100%;
         max-width: 1000px;
         margin: 0 auto;
         padding: 12px;
