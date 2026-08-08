@@ -211,7 +211,7 @@ const ImageModal = ({
                                         onClick={onClose} aria-label="Close">
                                                 <i className="button-icon bi bi-x-lg"></i>
                                         </button>
-                                </div>
+                                </div> 
                                 <div className="image-modal-back-and-forward-div"  >
                                         <button className="image-modal-nav-button"   
                                         onClick={onPrev} aria-label="Previous">
