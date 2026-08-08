@@ -206,7 +206,7 @@ const ImageModal = ({
                 <div className="image-modal-nav-and-text-div" aria-hidden={isImmersive}  >
                         <div className="image-modal-nav-div"  >
                                 <div className="image-modal-close-div"  >
-                                        <button className="image-modal-nav-button"
+                                        <button className="image-modal-nav-button" 
                                         ref={closeButtonRef}
                                         onClick={onClose} aria-label="Close">
                                                 <i className="button-icon bi bi-x-lg"></i>
