@@ -205,7 +205,7 @@ const ImageModal = ({
                 {/* Top bar (fades out via CSS when immersive) */}
                 <div className="image-modal-nav-and-text-div" aria-hidden={isImmersive}  >
                         <div className="image-modal-nav-div"  >
-                                <div className="image-modal-close-div"  >
+                                <div className="image-modal-close-div"  > 
                                         <button className="image-modal-nav-button"  
                                         ref={closeButtonRef}
                                         onClick={onClose} aria-label="Close">
