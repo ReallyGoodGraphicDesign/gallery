@@ -96,13 +96,11 @@ html, body, #root {
 }
 @media (min-width: 601px) and (max-width: 1024px) {
 .logo-carousel-image:hover {
-        opacity: 1;
         height: var(--banner_height_master-tablet);
 }
 }
 @media (max-width: 600px) {
 .logo-carousel-image:hover {
-        opacity: 1;
         height: var(--banner_height_master-cell);
 }
 }
