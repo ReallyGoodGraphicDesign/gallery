@@ -43,6 +43,14 @@ export async function onRequestGet({ request, env }) {
       // A deliberately fresh read that the browser then held for a minute would
       // defeat itself on the very next reload.
       "Cache-Control": fresh ? "no-store" : "private, max-age=60",
+      // Every label asks for this same URL but gets a different body, and an
+      // HTTP cache keys on the URL alone — so without this, logging out and
+      // back in under a different passcode inside the max-age window serves the
+      // previous label's rows from cache, and the server never hears about it.
+      // Folding the cookie into the cache key keeps the 60s cache working
+      // within a session while ending it at the session boundary, which is
+      // where the body stops being the same document.
+      Vary: "Cookie",
     },
   });
 }
