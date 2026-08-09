@@ -210,12 +210,48 @@ function App() {
       });
       if (res.ok) {
         setAuthed(true);
-      } else {
+      } else if (res.status === 401) {
         alert("Wrong password.");
+      } else if (res.status >= 500) {
+        // /api/login answers 500 "Server not configured" when GALLERY_PASSCODES
+        // or SESSION_SECRET is missing from the deployment, or when the passcode
+        // map isn't parseable JSON — it bails before comparing anything, so no
+        // passcode can work. Reporting that as "Wrong password." sends people
+        // hunting for a typo when the real fix is a secret + redeploy.
+        alert(
+          "The gallery isn't configured correctly right now, so no passcode will " +
+            "work. This is a problem on our end — please try again later."
+        );
+      } else {
+        alert(`Couldn't sign in (error ${res.status}). Please try again.`);
       }
     } catch {
-      alert("Something went wrong. Try again.");
+      alert("Couldn't reach the server. Check your connection and try again.");
     }
+  };
+
+  // Ending a session is two halves that have to happen together: the server
+  // clears the signed cookie, and every piece of state that session produced is
+  // dropped here. Skipping the second half would leave the passcode sitting in
+  // the splash input and the previous label's cards in memory — so this resets
+  // each auth/app hook back to the value it was declared with.
+  const handleLogout = async () => {
+    // A failed POST still shouldn't strand you in a session you asked to leave:
+    // the cookie survives, but the next /api/session check on reload settles it.
+    try {
+      await fetch("/api/logout", { method: "POST", credentials: "same-origin" });
+    } catch {
+      // offline — fall through to the local reset
+    }
+    setAuthed(false);
+    setInput("");
+    setCardData([]);
+    setFilteredCardData([]);
+    setSearchTerm("");
+    setSelectedCategory("");
+    setSelectedIndex(null);
+    setView("categories");
+    setLoading(true);
   };
 
   // 3. now that all hooks are declared, you can branch in the render
@@ -249,6 +285,7 @@ function App() {
       <Header
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
+        onLogout={handleLogout}
       />
       <main>
         {loading ? (

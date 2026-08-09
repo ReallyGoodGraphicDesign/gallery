@@ -142,39 +142,55 @@ body.menu-open .header {
   from { transform: translateY(-12px); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
 }
-/* Each of the three menu-inner children takes exactly one-third, so their
-   edges line up with the 3-column .card-grid below (same max-width, padding,
-   and 12px gap). min-width:0 lets the search input/select shrink to fit. */
-.menu-inner > .menu-modal-category-wrapper,
-.menu-inner > .menu-modal-input-reset,
-.menu-inner > .email-button-wrapper {
-        flex: 1 1 0;
+/* The menu row and .card-grid share a content box — same 1000px max-width, same
+   padding, same gap — so these widths are written to land on the grid's column
+   edges rather than on round percentages. A row of N items has N-1 gaps while
+   the grid it aligns to has more, which is where the pixel corrections come
+   from; each rule below sums to exactly 100% once its gaps are added back.
+   min-width:0 lets the search input shrink instead of forcing the row wider. */
+
+/* Large (grid is 4 wide): search spans 2 columns, email and logout 1 each.
+   (50% - 6) + 12 + (25% - 9) + 12 + (25% - 9) = 100%. No flex-grow: the bases
+   already fill the row, and growing would pull them off the column edges. */
+.menu-inner > .menu-modal-input-reset {
+        flex: 0 1 calc(50% - 6px);
         min-width: 0;
 }
-/* Tablet (grid is 2 wide): dropdown + search share one 50/50 row, email
-   drops to its own full-width row below. calc(50% - 4px) accounts for the
-   12px gap so two items fit exactly on the first row. */
+.menu-inner > .email-button-wrapper,
+.menu-inner > .logout-button-wrapper {
+        flex: 0 1 calc(25% - 9px);
+        min-width: 0;
+}
+/* Tablet (grid is 3 wide): search takes the full row, then email spans 2 of the
+   3 columns and logout the third. Thirds are written as 200%/3 and 100%/3 so
+   they sum to exactly 100% — 66.667 + 33.333 would leave a subpixel behind,
+   and with flex-wrap on, a subpixel of overflow drops logout to its own row. */
 @media (min-width: 601px) and (max-width: 1024px) {
 .menu-inner {
         flex-wrap: wrap;
 }
-.menu-inner > .menu-modal-category-wrapper,
 .menu-inner > .menu-modal-input-reset {
-        flex: 1 1 calc(50% - 4px);
-}
-.menu-inner > .email-button-wrapper {
         flex: 1 1 100%;
 }
+.menu-inner > .email-button-wrapper {
+        flex: 0 1 calc(200% / 3 - 4px);
 }
-/* Small (grid is 1 wide): each control on its own full-width row. */
+.menu-inner > .logout-button-wrapper {
+        flex: 0 1 calc(100% / 3 - 8px);
+}
+}
+/* Small (grid is 2 wide): search takes the full row, email and logout split the
+   next one. Gap is 8px here, not 12px, hence the different correction. */
 @media (max-width: 600px) {
 .menu-inner {
         flex-wrap: wrap;
 }
-.menu-inner > .menu-modal-category-wrapper,
-.menu-inner > .menu-modal-input-reset,
-.menu-inner > .email-button-wrapper {
+.menu-inner > .menu-modal-input-reset {
         flex: 1 1 100%;
+}
+.menu-inner > .email-button-wrapper,
+.menu-inner > .logout-button-wrapper {
+        flex: 0 1 calc(50% - 4px);
 }
 }
 .menu-modal-search-wrapper {
@@ -248,21 +264,29 @@ body.menu-open .header {
         border: none;
         outline: none;
 }
-.email-button-wrapper {
-        width: 100%; 
-        box-sizing: border-box; 
-        padding: 0; 
-        margin: 0; 
+/* Email and logout are the same object at different widths, so they share every
+   rule below. Keeping the icon padding in one place is what guarantees the two
+   buttons are exactly the same height when they sit side by side — an <a> and a
+   <button> agree on that only as long as nothing is set on one and not the
+   other. */
+.email-button-wrapper,
+.logout-button-wrapper {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
 }
-.email-button {
+.email-button,
+.logout-button {
         display: block;
         width: 100%;
         box-sizing: border-box;
-        padding: 4px 0 !important; 
+        padding: 4px 0 !important;
         text-align: center;
 		background-color: var(--button-bg);
 }
-.bi-envelope {
+.bi-envelope,
+.bi-box-arrow-right {
         font-size: 2rem;
         line-height: 1;
         padding: 16px 0 4px 0;

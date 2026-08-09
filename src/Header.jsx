@@ -4,7 +4,7 @@ import logo from "./assets/logo.png";
 
 // The category <select> that used to live in this menu was replaced by the
 // card grid in App's main area; search is all that remains here.
-const Header = ({ searchTerm, setSearchTerm }) => {
+const Header = ({ searchTerm, setSearchTerm, onLogout }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const inputRef = useRef(null);
 
@@ -60,7 +60,7 @@ return (
                                                 <i className="search-icon bi bi-search"></i>
                                         </span>
                                         <input className="menu-modal-search-input"
-                                        ref={inputRef} type="text" placeholder="Enter search terms here" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                                        ref={inputRef} type="text" placeholder="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                                 </div>
                                 <button className={`button reset-button ${searchTerm.length > 0 ? "visible" : "hidden"}`}
                                 onClick={() => setSearchTerm("")}>
@@ -69,9 +69,18 @@ return (
                         </div>
                         <div className="email-button-wrapper">
                                 <a className="button email-button"
-                                href="mailto:reallygoodgraphicdesign@gmail.com" target="_blank" rel="noopener noreferrer">
+                                href="mailto:reallygoodgraphicdesign@gmail.com" target="_blank" rel="noopener noreferrer"
+                                aria-label="Email" title="Email">
                                         <i className="bi bi-envelope"></i>
                                 </a>
+                        </div>
+                        {/* Icon-only like its neighbour, so the label lives in
+                            aria-label/title rather than visible text. */}
+                        <div className="logout-button-wrapper">
+                                <button className="button logout-button" type="button"
+                                onClick={onLogout} aria-label="Log out" title="Log out">
+                                        <i className="bi bi-box-arrow-right"></i>
+                                </button>
                         </div>
                 </div>
         </div>)}
