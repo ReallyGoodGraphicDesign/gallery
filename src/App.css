@@ -338,6 +338,14 @@ body.menu-open .category-bar {
         padding-left: 8px;
 }
 }
+/* That padding-left exists to clear the back button. With no button beside it
+   the heading would be holding a gap open for a control that isn't there, and
+   would no longer line up with the card grid's left edge below it. Specificity
+   (0,2,0) beats both rules above, so this wins regardless of source order or
+   which breakpoint is active. */
+.category-bar-no-back .category-current {
+        padding-left: 0;
+}
 /* Owns the space on both sides of the bullet. In em so it tracks the font size.
    The literal spaces that used to sit either side are gone from the markup —
    HTML collapses repeated spaces, so they weren't adjustable. */

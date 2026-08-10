@@ -123,9 +123,29 @@ function App() {
 
   const categoryCards = useMemo(() => buildCategoryCards(cardData), [cardData]);
 
+  // cardData is already filtered to this passcode's access label, so exactly one
+  // tile means this label only reaches one category — and a chooser offering a
+  // single choice is a click that carries no information. Derived during render
+  // rather than pushed into state by an effect: setting view="images" after load
+  // would paint the one-tile chooser for a frame before replacing it.
+  //
+  // Deliberately NOT setting selectedCategory to match. Leaving it "" means the
+  // filter below takes its "every image" path, so a row whose category cell went
+  // blank still appears here instead of vanishing from the only screen this
+  // label has. The name is used for the heading only.
+  const soloCategory =
+    !loading && categoryCards.length === 1 ? categoryCards[0].name : null;
+
   // Typing a search term should show results, not leave you staring at the
   // chooser wondering why nothing happened.
-  const showingImages = view === "images" || searchTerm.trim() !== "";
+  const showingImages =
+    view === "images" || searchTerm.trim() !== "" || soloCategory !== null;
+
+  // With one category there is no chooser to go back TO, so the back button only
+  // earns its place while a search is narrowing the grid — where it still means
+  // "clear the search". backToCategories needs no solo-case branch: it clears the
+  // term and sets view="categories", and showingImages stays true on its own.
+  const showBackButton = !soloCategory || searchTerm.trim() !== "";
 
   const openCategory = (name) => {
     setSelectedCategory(name);
@@ -304,7 +324,7 @@ function App() {
           </div>
         ) : filteredCardData.length > 0 ? (
           <>
-          <div className="category-bar">
+          <div className={`category-bar${showBackButton ? "" : " category-bar-no-back"}`}>
             {/* Same classes as the header's menu button, so size, colour, hover
                 and active all come from the same rules rather than a copy that
                 can drift. The glyph is a chevron rather than that button's X:
@@ -312,14 +332,21 @@ function App() {
                 overlay. The label the text used to carry moves to aria-label.
                 First in the DOM, not just visually first, so reading order and
                 tab order match what's on screen. */}
+            {showBackButton && (
             <button type="button" className="button menu-toggle-button category-back-button"
               onClick={backToCategories} aria-label="Back" title="Back">
               <i className="bi bi-chevron-left"></i>
             </button>
+            )}
             <p className="category-current">
               {/* Without the All tile, "no category" is only reachable by
-                  searching from the chooser — so label it as a search. */}
-              {selectedCategory || (searchTerm.trim() ? "Search results" : "All images")}
+                  searching from the chooser — so label it as a search. A solo
+                  category names itself here even though selectedCategory is ""
+                  — the grid is its images, so the name is what describes it. */}
+              {selectedCategory ||
+                (searchTerm.trim()
+                  ? "Search results"
+                  : soloCategory || "All images")}
               {/* The gap around the bullet is CSS, not literal spaces: HTML
                   collapses a run of spaces to one, so it can't be widened here. */}
               <span className="category-current-sep">·</span>
