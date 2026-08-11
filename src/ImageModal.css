@@ -73,16 +73,26 @@
         background: var(--image-modal-nav-and-text-div-bg);
         color: var(--image-modal-and-card-text-txt);
         width: 100%;
-        height: fit-content;
+        /* Same 56px as .header-inner in Header.css — this bar reads as the
+           modal's header, so the two have to agree exactly. Height is set
+           rather than derived: the tallest child is the 40px nav button, so
+           symmetric padding can't land on 56 in every range (the text column
+           is 38-40px depending on breakpoint). Vertical padding is therefore
+           0 and align-items:center does the centring. */
+        height: 56px;
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
         align-items: center;
-        padding: 12px;
-        gap: 12px; 
+        /* 8px, not 12: with the height fixed at 56 and the tallest child 40px,
+           the centring leaves 8px above and below, so 8 is what the sides have
+           to be to read as even padding. .image-modal-image-container-div uses
+           the same 8 so the image edge lines up with the close button. */
+        padding: 0 8px;
+        gap: 12px;
         box-sizing: border-box;
         border-radius: 0;
-        min-height: fit-content;
+        min-height: 56px;
         opacity: 1;
         transition: opacity 200ms ease;
         position: relative; 
@@ -135,7 +145,7 @@
         align-items: flex-start;
         padding: 0;
         margin: 0;
-        gap: 12px;
+        gap: 8px;
         box-sizing: border-box;
         border-radius: none;
         flex: 0 0 auto;
@@ -238,7 +248,7 @@
         justify-content: space-between;
         align-items: flex-end;
         padding: 0;
-        gap: 12px;
+        gap: 8px;
         box-sizing: border-box;
         border-radius: 6px;
         pointer-events: none;
@@ -370,6 +380,37 @@
 
 /* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
 
+/* At tablet and phone the arrow box is fixed with left:0/right:0, so each
+   button is flush against a viewport edge. The 4px the global `button` rule in
+   variables.css puts on all four corners reads as the button being clipped
+   there, so the two corners on the edge are squared; the inner two keep it.
+   First and last child rather than the icon classes: the box holds exactly
+   these two buttons, prev then next, and space-between puts them on the edges
+   in that order. Large view is untouched — there the arrows sit inside the nav
+   bar with air on both sides and the full radius is correct. */
+@media (min-width: 601px) and (max-width: 1024px) {
+.image-modal-back-and-forward-div .image-modal-nav-button:first-child {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+}
+.image-modal-back-and-forward-div .image-modal-nav-button:last-child {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+}
+}
+@media (max-width: 600px) {
+.image-modal-back-and-forward-div .image-modal-nav-button:first-child {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+}
+.image-modal-back-and-forward-div .image-modal-nav-button:last-child {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+}
+}
+
+/* X X X X X X X X X X X X X X X X X X X X X X X X X X X */
+
 /* yyy xxx */ .image-modal-text-div {
         background-color: var(--image-modal-text-div-bg);
         padding: 2px 0 0 0;
@@ -379,7 +420,7 @@
 @media (min-width: 601px) and (max-width: 1024px) {
 .image-modal-text-div {
         opacity: 1;
-        padding: 4px 0 0 6px;
+        padding: 0;
 }
 }
 @media (max-width: 600px) {
@@ -448,7 +489,9 @@
         align-items: center;
         border-radius: none;
         overflow: hidden;
-        padding: 12px;
+        /* Matches the nav bar's 8px so the image's left and right edges line up
+           with the close button and the headline above them. */
+        padding: 8px;
         box-sizing: border-box;
         /* It is a <button> so the immersive toggle is keyboard-operable; strip
            the UA chrome so it still lays out exactly like the div it replaced. */
