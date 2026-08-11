@@ -33,10 +33,18 @@ return (
 <header className="header">
         <div className="header-inner">
                 <div className="header-left">
+                        {/* Named for what it does, not what it shows — the
+                            logo is the only clue on screen that this scrolls,
+                            and "Logo, button" doesn't say that. Same
+                            aria-label + title pairing as the buttons below. */}
                         <button className="logo-button"
+                        aria-label="Scroll to top" title="Scroll to top"
                         onClick={() =>
                         window.scrollTo({ top: 0, behavior: "smooth" })}>
-                                <img src={logo} alt="Logo" />
+                                {/* Decorative: the button's aria-label is the
+                                    accessible name, so alt text here would be
+                                    overridden and never read. */}
+                                <img src={logo} alt="" />
                         </button>
                 </div>
                 <div className="header-right">
