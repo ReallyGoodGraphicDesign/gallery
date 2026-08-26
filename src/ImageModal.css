@@ -433,15 +433,16 @@
 
 .image-modal-headline {
         background-color: var(--image-modal-headline-bg);
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         margin: 0;
-        padding: 0;
+        padding: 0 0 2px 0;
         line-height: 1rem;    
+		text-transform: uppercase;
 }
 .image-modal-date-location {
         background-color: var(--image-modal-date-bg);
-        font-size: 1rem;
-        margin: 0 0 0 0;
+        font-size: .9rem;
+        margin: 0;
         padding: 4px 0 0 0;
         line-height: 1rem;    
 }
