@@ -325,7 +325,7 @@ function App() {
         ) : filteredCardData.length > 0 ? (
           <>
           <div className={`category-bar${showBackButton ? "" : " category-bar-no-back"}`}>
-            {/* Same classes as the header's menu button, so size, colour, hover
+            {/* Same classes as the header's menu button, so size, colour, hover 
                 and active all come from the same rules rather than a copy that
                 can drift. The glyph is a chevron rather than that button's X:
                 this goes up a level to the chooser, it doesn't dismiss an
