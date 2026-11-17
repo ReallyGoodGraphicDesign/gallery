@@ -197,20 +197,7 @@ html, body, #root {
 .menu-modal-input-reset:has(.funtime-button.hidden) {
   grid-template-columns: 1fr; 
 }
-/* `margin: 0 auto` centres main, but it also cancels the cross-axis stretch it
-   would otherwise get as a flex item of .App — an item with auto margins on
-   the cross axis is sized to fit its content instead. That left main's width
-   derived from its content's intrinsic width, which for a grid of cards means
-   the natural pixel width of the <img> inside them. An image that hasn't
-   arrived yet has no natural width, so until the thumbnails loaded main
-   collapsed to the width of the card TEXT — 393px instead of 1000px at a
-   1200px viewport, with 83px cards — and snapped into place only once they
-   did. Worst on a passcode whose chooser holds a single tile: nothing else
-   contributes width, and nothing masks the reflow.
 
-   width: 100% restores a definite cross size, so main measures 1000px (or the
-   viewport, whichever is smaller) from the first paint and the grid is correct
-   before any image has been fetched. */
 main {
         background: var(--main-bg);
         flex: 1;
@@ -220,12 +207,7 @@ main {
         padding: 12px;
         box-sizing: border-box;
 }
-/* The category bar sits at the top of main and already carries 8px of padding
-   below itself, so the full 12px above it reads as too much space. Trimming
-   main's top padding to 8px only when the bar is present keeps the gap even
-   without touching the chooser view, which has no bar and keeps its 12px.
-   `body.menu-open main` below is (0,1,2) against this rule's (0,1,1), so the
-   open menu still takes its own top padding from there, not from here. */
+
 main:has(> .category-bar) {
         padding: 8px 12px 12px 12px;
 }
@@ -239,8 +221,7 @@ main {
         opacity: 1;
         padding: 8px;
 }
-/* :has() outranks the plain `main` above, so the mobile 8px has to be restated
-   here or the bar view would pick up the desktop 12px sides. */
+
 main:has(> .category-bar) {
         padding: 8px;
 }
@@ -363,7 +344,7 @@ body.menu-open .category-bar {
 }
 .card-grid {
         display: grid;
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap: 12px;
         padding-bottom: 20px;
 }
